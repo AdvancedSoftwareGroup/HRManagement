@@ -23,4 +23,7 @@ hs_err_pid*
 
 src/main/resources/application-dev.properties
 /target/
+
+#idea files
 ./idea/**
+*.iml

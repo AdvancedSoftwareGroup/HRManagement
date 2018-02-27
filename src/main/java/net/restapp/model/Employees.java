@@ -23,7 +23,7 @@ public class Employees {
     private String password;
 
     @Column(name = "first_name")
-    private String firstaName;
+    private String firstName;
 
     @Column(name = "last_name")
     private String lastName;
