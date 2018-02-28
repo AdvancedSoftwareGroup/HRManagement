@@ -32,6 +32,13 @@ public class Status {
     @OneToMany(mappedBy = "status")
     List<WorkingHours> workingHoursList;
 
+    public String getName() {
+        return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
   //  private List<Status> statuses = Arrays.asList(new Status("Workday", "Hospital", "Vacation", "Absent", "Overtime"));
 
 }

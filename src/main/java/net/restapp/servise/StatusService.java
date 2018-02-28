@@ -12,4 +12,5 @@ public interface StatusService {
     List<Status> getAll();
     Status getById(Long id);
     Status findByName(String name);
+    boolean isStatusExist(Status status);
 }
