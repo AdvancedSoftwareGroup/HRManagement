@@ -32,4 +32,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Department getById(Long id) {
         return repoDepartment.findOne(id);
     }
+
+
 }
