@@ -39,4 +39,9 @@ public class StatusServiceImpl implements StatusService {
         return repoStatus.findByName(name);
     }
 
+    @Override
+    public boolean isStatusExist(net.restapp.model.Status status) {
+        return findByName(status.getName())!=null;
+    }
+
 }
