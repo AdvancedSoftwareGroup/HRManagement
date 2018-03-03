@@ -1,0 +1,48 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!--insert data to the table roles-->
+    <changeSet id="1" author="Anulich Svitlana" >
+        <insert tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="ROLE_MODERATOR"/>
+        </insert>
+    </changeSet>
+
+    <!--insert data to the table status-->
+    <changeSet id="2" author="Anulich Svitlana" >
+        <insert tableName="status">
+            <column name="name" value="WORK"/>
+            <column name="salary_coef" value="1"/>
+        </insert>
+        <insert tableName="status">
+            <column name="name" value="VOCATION"/>
+            <column name="salary_coef" value="null"/>
+        </insert>
+        <insert tableName="status">
+            <column name="name" value="HOSPITAL"/>
+            <column name="salary_coef" value="null"/>
+        </insert>
+        <insert tableName="status">
+            <column name="name" value="REMOTE_WORK"/>
+            <column name="salary_coef" value="null"/>
+        </insert>
+        <insert tableName="status">
+            <column name="name" value="APSENT"/>
+            <column name="salary_coef" value="0"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

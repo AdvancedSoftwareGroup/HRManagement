@@ -26,7 +26,12 @@ public class Position {
             message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
     private String name;
 
+    @Column(name ="dayForVacation")
+    @NotNull(message = "This field must be NOT NULL")
+    private int dayForVacation;
+
     @Column(name = "salary")
+    @NotNull(message = "This field must be NOT NULL")
     private BigDecimal salary;
 
     @OneToMany(mappedBy = "position")

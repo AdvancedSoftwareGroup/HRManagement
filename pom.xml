@@ -64,6 +64,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.4.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Tomcat Spring Boot starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

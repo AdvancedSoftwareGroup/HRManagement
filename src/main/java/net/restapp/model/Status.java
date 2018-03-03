@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Status {
     private long id;
 
     @Column(name = "name")
+    @NotNull(message = "This field must be NOT NULL")
     private String name;
 
     @Column(name = "salary_coef")
