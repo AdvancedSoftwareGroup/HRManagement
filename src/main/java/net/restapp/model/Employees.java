@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,15 @@ public class Employees {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name ="availableVacationDay")
+    private int availableVacationDay;// available day for Vacation
+
+    @Column(name = "experience")
+    private int experience;
+
+    @Column(name = "startWorkingDate")
+    private Date startWorkingDate;
 
     @ManyToOne
     private Role role;
