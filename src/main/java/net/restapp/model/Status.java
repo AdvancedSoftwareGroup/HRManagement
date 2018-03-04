@@ -41,6 +41,5 @@ public class Status {
     public Long getId() {
         return id;
     }
-  //  private List<Status> statuses = Arrays.asList(new Status("Workday", "Hospital", "Vacation", "Absent", "Overtime"));
 
 }

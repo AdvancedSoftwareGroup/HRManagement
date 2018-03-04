@@ -1,14 +1,14 @@
 package net.restapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.internal.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Table(name = "position")
@@ -32,14 +32,16 @@ public class Position {
 
     @Column(name = "salary")
     @NotNull(message = "This field must be NOT NULL")
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "99999.00")
     private BigDecimal salary;
 
-    @OneToMany(mappedBy = "position")
-    List<Employees> employeesList;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-    @ManyToMany
-    @JoinTable(name = "position_department", joinColumns=@JoinColumn(name = "position_id"),
-            inverseJoinColumns = @JoinColumn(name = "department_id"))
-    List<Department> departmentList;
+    @Nullable
+    @OneToOne(mappedBy = "position")
+    private Employees employees;
 
 }

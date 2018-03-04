@@ -9,14 +9,6 @@
 
 
     <changeSet id="1" author="Anulich Svitlana">
-        <addForeignKeyConstraint baseTableName="employees" baseColumnNames="department_id"
-                                 constraintName="fk_employees_department"
-                                 referencedTableName="department"
-                                 referencedColumnNames="id"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"/>
-    </changeSet>
-    <changeSet id="2" author="Anulich Svitlana">
         <addForeignKeyConstraint baseTableName="employees" baseColumnNames="position_id"
                                  constraintName="fk_employees_positions"
                                  referencedTableName="position"
@@ -24,31 +16,23 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"/>
     </changeSet>
+    <changeSet id="2" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="employees" baseColumnNames="user_id"
+                                 constraintName="fk_employees_users"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
     <changeSet id="3" author="Anulich Svitlana">
-        <addForeignKeyConstraint baseTableName="employees" baseColumnNames="role_id"
-                                 constraintName="fk_employees_role"
+        <addForeignKeyConstraint baseTableName="users" baseColumnNames="role_id"
+                                 constraintName="fk_users_role"
                                  referencedTableName="roles"
                                  referencedColumnNames="id"
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"/>
     </changeSet>
     <changeSet id="4" author="Anulich Svitlana">
-        <addForeignKeyConstraint baseTableName="position_department" baseColumnNames="position_id"
-                                 constraintName="fk_position_department_position_id"
-                                 referencedTableName="position"
-                                 referencedColumnNames="id"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"/>
-    </changeSet>
-    <changeSet id="5" author="Anulich Svitlana">
-        <addForeignKeyConstraint baseTableName="position_department" baseColumnNames="department_id"
-                                 constraintName="fk_position_department_department_id"
-                                 referencedTableName="department"
-                                 referencedColumnNames="id"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"/>
-    </changeSet>
-    <changeSet id="6" author="Anulich Svitlana">
         <addForeignKeyConstraint baseTableName="workinghours" baseColumnNames="employees_id"
                                  constraintName="fk_workinghours_employees_id"
                                  referencedTableName="employees"
@@ -56,7 +40,7 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"/>
     </changeSet>
-    <changeSet id="7" author="Anulich Svitlana">
+    <changeSet id="5" author="Anulich Svitlana">
         <addForeignKeyConstraint baseTableName="workinghours" baseColumnNames="event_id"
                                  constraintName="fk_workinghours_event_id"
                                  referencedTableName="event"
@@ -64,10 +48,18 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"/>
     </changeSet>
-    <changeSet id="8" author="Anulich Svitlana">
+    <changeSet id="6" author="Anulich Svitlana">
         <addForeignKeyConstraint baseTableName="workinghours" baseColumnNames="status_id"
                                  constraintName="fk_workinghours_status_id"
                                  referencedTableName="status"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet id="7" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="position" baseColumnNames="department_id"
+                                 constraintName="fk_position_department"
+                                 referencedTableName="department"
                                  referencedColumnNames="id"
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"/>

@@ -9,22 +9,23 @@
 
 
     <changeSet id="1" author="Anulich Svitlana">
-        <createTable tableName="department">
-            <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(225)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="2" author="Anulich Svitlana">
         <createTable tableName="roles">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Anulich Svitlana">
+        <createTable tableName="department">
+            <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(225)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -44,19 +45,36 @@
             <column name="salary" type="decimal">
                 <constraints nullable="false"/>
             </column>
+            <column name="department_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
     <changeSet id="4" author="Anulich Svitlana">
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="Anulich Svitlana">
         <createTable tableName="employees">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="available_vacation_day" type="int">
                 <constraints nullable="true"/>
-            </column>
-            <column name="email" type="varchar(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="experience" type="int">
                 <constraints nullable="true"/>
@@ -67,25 +85,19 @@
             <column name="last_name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
             <column name="start_working_date" type="datetime">
                 <constraints nullable="false"/>
-            </column>
-            <column name="department_id" type="bigint">
-                <constraints unique="true" nullable="false"/>
             </column>
             <column name="position_id" type="bigint">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="role_id" type="bigint">
+            <column name="user_id" type="bigint">
                 <constraints unique="true" nullable="false"/>
             </column>
-        </createTable>
+         </createTable>
     </changeSet>
 
-    <changeSet id="5" author="Anulich Svitlana">
+    <changeSet id="6" author="Anulich Svitlana">
         <createTable tableName="event">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
@@ -99,7 +111,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="6" author="Anulich Svitlana">
+    <changeSet id="7" author="Anulich Svitlana">
         <createTable tableName="status">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
@@ -113,7 +125,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="7" author="Anulich Svitlana">
+    <changeSet id="8" author="Anulich Svitlana">
         <createTable tableName="workinghours">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
@@ -137,18 +149,6 @@
                 <constraints unique="true" nullable="false"/>
             </column>
         </createTable>
-    </changeSet>
-
-    <changeSet id="8" author="Anulich Svitlana">
-        <createTable tableName="position_department">
-            <column name="position_id" type="bigint">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="department_id" type="bigint">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-
     </changeSet>
 
 </databaseChangeLog>

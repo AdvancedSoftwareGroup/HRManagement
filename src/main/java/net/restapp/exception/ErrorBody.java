@@ -17,12 +17,14 @@ public class ErrorBody {
     private String message;
     private String path;
 
-    public ErrorBody(HttpStatus status, Class exceptionClass, String message,HttpServletRequest request) {
+    public ErrorBody(HttpStatus status, Class exceptionClass, String message, HttpServletRequest request) {
 
         this.timestamp = System.nanoTime();
         this.status = status.value();
         this.error = status.getReasonPhrase();
-        this.exception = exceptionClass.getName();
+        if (exceptionClass != null) {
+            this.exception = exceptionClass.getName();
+        }
         this.message = message;
         this.path = request.getRequestURI();
     }

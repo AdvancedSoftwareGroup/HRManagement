@@ -1,7 +1,10 @@
 package net.restapp.model;
 
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
+import net.restapp.json.EmployeesJsonSerializer;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,17 +14,12 @@ import java.util.List;
 @Table(name = "employees")
 @Getter
 @Setter
+@JsonSerialize(using = EmployeesJsonSerializer.class)
 public class Employees {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "password")
-    private String password;
 
     @Column(name = "first_name")
     private String firstName;
@@ -38,14 +36,13 @@ public class Employees {
     @Column(name = "startWorkingDate")
     private Date startWorkingDate;
 
-    @ManyToOne
-    private Role role;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "position_id")
     private Position position;
-
-    @ManyToOne
-    private Department department;
 
     @OneToMany(mappedBy = "employees")
     private List<WorkingHours> workingHoursList;

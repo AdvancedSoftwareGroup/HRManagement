@@ -1,5 +1,6 @@
 package net.restapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
@@ -26,5 +27,5 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    List<Employees> employeesList;
+    List<User> userList;
 }

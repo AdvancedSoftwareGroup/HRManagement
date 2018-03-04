@@ -1,5 +1,6 @@
 package net.restapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
@@ -26,9 +27,10 @@ public class Department {
             message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department")
-    List<Employees> employeesList;
+    private List<Position> positions;
 
-    @ManyToMany(mappedBy = "departmentList")
-    List<Position> positionList;
+
+
 }
