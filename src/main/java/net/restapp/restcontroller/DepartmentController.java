@@ -21,12 +21,9 @@ public class DepartmentController {
     DepartmentService departmentService;
 
     @RequestMapping(value = "/{departmentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getDepartment(@PathVariable("departmentId") Long departmentId){
+    public ResponseEntity<Department> getDepartment(@PathVariable("departmentId") Long departmentId){
         if (departmentId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(builder.path("/department/getAll").buildAndExpand().toUri());
-            return new ResponseEntity<>(new Department(),httpHeaders ,HttpStatus.CREATED);
         }
         Department department =  departmentService.getById(departmentId);
 
