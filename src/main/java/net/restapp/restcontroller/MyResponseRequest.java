@@ -29,11 +29,11 @@ public class MyResponseRequest {
         return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Object> bedRequest(HttpServletRequest request){
+    public ResponseEntity<Object> bedRequest(HttpServletRequest request, String message){
         ErrorBody errorBody = new ErrorBody(
                 HttpStatus.BAD_REQUEST,
                null,
-                object.getClass().getSimpleName()+" id must be not null",
+                message,
                 request);
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }

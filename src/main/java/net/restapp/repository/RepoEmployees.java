@@ -9,7 +9,7 @@ import java.util.List;
 public interface RepoEmployees extends JpaRepository<Employees,Long> {
 
     @Query(value = "SELECT * FROM employees WHERE position_id = ?1", nativeQuery = true)
-    List<Employees> findAllWithPositionId(Long id);
+    Employees findAllWithPositionId(Long id);
 
 }
 

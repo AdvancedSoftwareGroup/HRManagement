@@ -32,7 +32,9 @@ public class DepartmentController {
                                                 HttpServletRequest request){
 
         if (departmentId == null){
-           return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "department id must be not null");
         }
         Department department =  departmentService.getById(departmentId);
 
@@ -49,7 +51,9 @@ public class DepartmentController {
                                                    HttpServletRequest request){
 
         if (departmentId == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "department id must be not null");
         }
         Department department = departmentService.getById(departmentId);
 
@@ -57,6 +61,11 @@ public class DepartmentController {
             return myResponseRequest.notFoundRequest(request,departmentId);
         }
         departmentService.delete(departmentId);
+        if (departmentService.getById(departmentId) != null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "can't delete position. First you must delete employee");
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -68,7 +77,9 @@ public class DepartmentController {
                                                  HttpServletRequest request){
 
         if (departmentId == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "department id must be not null");
         }
         Department department2 = departmentService.getById(departmentId);
 
@@ -101,16 +112,14 @@ public class DepartmentController {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         if (department == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "department id must be not null");
         }
         departmentService.save(department);
 
         httpHeaders.setLocation(builder.path("/department/getAll").buildAndExpand().toUri());
         return new ResponseEntity<>(department,httpHeaders,HttpStatus.CREATED);
     }
-
-
-
-
 
 }

@@ -6,6 +6,7 @@ import net.restapp.model.Position;
 import net.restapp.model.User;
 import net.restapp.repository.RepoEmployees;
 import net.restapp.repository.RepoPosition;
+import net.restapp.repository.RepoUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ public class EmployeesServiceImpl implements EmployeesService {
     RepoEmployees repoEmployees;
 
     @Autowired
+    RepoUser repoUser;
+
+    @Autowired
     UserService userService;
 
     @Autowired
@@ -28,19 +32,22 @@ public class EmployeesServiceImpl implements EmployeesService {
 
     @Override
     @Transactional
-    public void save(Employees employees) {
-        Long positionId = employees.getPosition().getId();
-        List<Employees> list = repoEmployees.findAllWithPositionId(positionId);
-        if (!list.isEmpty()){
-            throw  new EntityAlreadyExistException(
-                    "Employee for position with positionid="+positionId+" already exist.");
-        }
+    public void add(Employees employees) {
+        employees.setAvailableVacationDay(0);
         edit(employees);
     }
 
     @Override
+    @Transactional
     public void edit(Employees employees) {
         Long positionId = employees.getPosition().getId();
+        Employees databaseEmployee = repoEmployees.findAllWithPositionId(positionId);
+        if (databaseEmployee != null) {
+            if (databaseEmployee.getPosition().getId() != employees.getPosition().getId()) {
+                throw new EntityAlreadyExistException(
+                        "Employee for position with positionid=" + positionId + " already exist.");
+            }
+        }
         Position position = repoPosition.findOne(positionId);
         if (position == null){
             throw new EntityNotFoundException(
@@ -54,8 +61,11 @@ public class EmployeesServiceImpl implements EmployeesService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
+        Employees employees = getById(id);
         repoEmployees.delete(id);
+        repoUser.delete(employees.getUser().getId());
     }
 
     @Override

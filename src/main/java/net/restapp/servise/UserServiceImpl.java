@@ -1,6 +1,5 @@
 package net.restapp.servise;
 
-import net.restapp.exception.EntityAlreadyExistException;
 import net.restapp.model.User;
 import net.restapp.repository.RepoUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +13,9 @@ public class UserServiceImpl implements UserService {
     RepoUser repoUser;
 
     @Override
-    public void save(User user) {
-        User user1 = repoUser.findByEmail(user.getEmail());
-        if (user1 != null){
-            throw new EntityAlreadyExistException("User with email="+user.getEmail()+" already exist");
-        }
+    public void save(User user){
         repoUser.save(user);
     }
-
     @Override
     public void delete(Long id) {
         repoUser.delete(id);

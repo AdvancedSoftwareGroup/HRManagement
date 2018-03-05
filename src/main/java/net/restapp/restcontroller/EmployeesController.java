@@ -30,7 +30,9 @@ public class EmployeesController {
                                                 HttpServletRequest request){
 
         if (employeeId == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "employee id must be not null");
         }
         Employees employees =  employeesService.getById(employeeId);
 
@@ -44,11 +46,13 @@ public class EmployeesController {
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deleteEmploee(@PathVariable("employeeId") Long employeeId,
+    public ResponseEntity<Object> deleteEmployee(@PathVariable("employeeId") Long employeeId,
                                                    HttpServletRequest request){
 
         if (employeeId == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "employee id must be not null");
         }
         Employees employees = employeesService.getById(employeeId);
 
@@ -56,28 +60,31 @@ public class EmployeesController {
             return myResponseRequest.notFoundRequest(request,employeeId);
         }
         employeesService.delete(employeeId);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    @RequestMapping(value = "/{employeeId}",
-//            method = RequestMethod.POST,
-//            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseEntity<Object> editEmployee(@PathVariable("employeeId") Long employeeId,
-//                                                 @RequestBody @Valid Employees employees,
-//                                                 HttpServletRequest request){
-//
-//        if (employeeId == null){
-//            return myResponseRequest.bedRequest(request);
-//        }
-//        Employees employees1 = employeesService.getById(employeeId);
-//
-//        if (employees1 == null) {
-//            return myResponseRequest.notFoundRequest(request,employeeId);
-//        }
-//        employees.setId(employeeId);
-//        employeesService.edit(employees);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    @RequestMapping(value = "/{employeeId}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> editEmployee(@PathVariable("employeeId") Long employeeId,
+                                                 @RequestBody @Valid Employees employees,
+                                                 HttpServletRequest request){
+
+        if (employeeId == null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "employee id must be not null");
+        }
+        Employees employees1 = employeesService.getById(employeeId);
+
+        if (employees1 == null) {
+            return myResponseRequest.notFoundRequest(request,employeeId);
+        }
+        employees.setId(employeeId);
+        employeesService.edit(employees);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
@@ -99,9 +106,11 @@ public class EmployeesController {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         if (employees == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "employee id must be not null");
         }
-        employeesService.save(employees);
+        employeesService.add(employees);
 
         httpHeaders.setLocation(builder.path("/employees/getAll").buildAndExpand().toUri());
         return new ResponseEntity<>(employees, httpHeaders, HttpStatus.CREATED);

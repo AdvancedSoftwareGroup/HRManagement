@@ -14,7 +14,7 @@
                                  referencedTableName="position"
                                  referencedColumnNames="id"
                                  onUpdate="CASCADE"
-                                 onDelete="CASCADE"/>
+                                 onDelete="NO ACTION"/>
     </changeSet>
     <changeSet id="2" author="Anulich Svitlana">
         <addForeignKeyConstraint baseTableName="employees" baseColumnNames="user_id"
@@ -30,7 +30,7 @@
                                  referencedTableName="roles"
                                  referencedColumnNames="id"
                                  onUpdate="CASCADE"
-                                 onDelete="CASCADE"/>
+                                 onDelete="NO ACTION"/>
     </changeSet>
     <changeSet id="4" author="Anulich Svitlana">
         <addForeignKeyConstraint baseTableName="workinghours" baseColumnNames="employees_id"
@@ -62,7 +62,7 @@
                                  referencedTableName="department"
                                  referencedColumnNames="id"
                                  onUpdate="CASCADE"
-                                 onDelete="CASCADE"/>
+                                 onDelete="NO ACTION"/>
     </changeSet>
 
 </databaseChangeLog>

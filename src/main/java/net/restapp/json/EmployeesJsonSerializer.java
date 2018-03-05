@@ -27,6 +27,7 @@ public class EmployeesJsonSerializer extends JsonSerializer<Employees> {
         User user = employees.getUser();
         if (user != null) {
             jsonGenerator.writeObjectFieldStart("user");
+            jsonGenerator.writeNumberField("id", user.getId());
             jsonGenerator.writeStringField("email", user.getEmail());
             Role role = user.getRole();
             if (role != null) {

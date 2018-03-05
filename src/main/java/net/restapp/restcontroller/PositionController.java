@@ -29,7 +29,9 @@ public class PositionController {
                                                 HttpServletRequest request){
 
         if (positionId == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "position id must be not null");
         }
         Position position =  positionService.getById(positionId);
 
@@ -46,7 +48,9 @@ public class PositionController {
                                                    HttpServletRequest request){
 
         if (positionId == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "position id must be not null");
         }
         Position position = positionService.getById(positionId);
 
@@ -54,6 +58,11 @@ public class PositionController {
             return myResponseRequest.notFoundRequest(request,positionId);
         }
         positionService.delete(positionId);
+        if (positionService.getById(positionId) != null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "can't delete position. First you must delete employee");
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -65,7 +74,9 @@ public class PositionController {
                                                  HttpServletRequest request){
 
         if (positionId == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "position id must be not null");
         }
         Position position1= positionService.getById(positionId);
 
@@ -98,7 +109,9 @@ public class PositionController {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         if (position == null){
-            return myResponseRequest.bedRequest(request);
+            return myResponseRequest.bedRequest(
+                    request,
+                    "position id must be not null");
         }
         positionService.save(position);
 
