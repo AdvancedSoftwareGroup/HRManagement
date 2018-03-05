@@ -64,4 +64,5 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"/>
     </changeSet>
+
 </databaseChangeLog>

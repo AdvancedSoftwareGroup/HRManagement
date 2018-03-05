@@ -1,6 +1,5 @@
 package net.restapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.Nullable;
 import lombok.Getter;
 import lombok.Setter;

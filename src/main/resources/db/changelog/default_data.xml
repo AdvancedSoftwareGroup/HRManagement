@@ -45,6 +45,7 @@
 
     </changeSet>
 
+
     <!--insert ADMIN to user table-->
     <changeSet id="3" author="Anulich Svitlana" >
         <insert tableName="users">
