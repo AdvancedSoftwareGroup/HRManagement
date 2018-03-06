@@ -31,4 +31,9 @@ public class ScheduledTasks {
             //Тут должна быть отправка по почте
         }
     }
+    @Scheduled(fixedRate = 5000)
+    public void rep(){
+        Calendar cal = Calendar.getInstance();
+    }
+
 }
