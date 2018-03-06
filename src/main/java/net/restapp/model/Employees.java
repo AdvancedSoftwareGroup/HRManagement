@@ -1,7 +1,12 @@
 package net.restapp.model;
 
 
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.json.EmployeesJsonSerializer;
@@ -12,9 +17,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "employees")
+
 @Getter
 @Setter
 @JsonSerialize(using = EmployeesJsonSerializer.class)
+
+
+
 public class Employees {
 
     @Id
@@ -44,6 +53,11 @@ public class Employees {
     @JoinColumn(name = "position_id")
     private Position position;
 
+    @OneToMany(mappedBy = "employee")
+    @JsonBackReference
+    private  List<ArchiveSalary> archiveSalary;
+
     @OneToMany(mappedBy = "employees")
     private List<WorkingHours> workingHoursList;
+
 }
