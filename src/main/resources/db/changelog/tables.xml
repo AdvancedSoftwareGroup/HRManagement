@@ -124,7 +124,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="8" author="Anulich Svitlana">
+    <changeSet id="10" author="Anulich Svitlana">
         <createTable tableName="workinghours">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
@@ -139,13 +139,30 @@
                 <constraints nullable="false"/>
             </column>
             <column name="employees_id" type="bigint">
-                <constraints unique="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="event_id" type="bigint">
-                <constraints unique="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="status_id" type="bigint">
-                <constraints unique="true" nullable="false"/>
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="11" author="Anulich Svitlana">
+        <createTable tableName="archiveSalary">
+            <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="monthSalary" type="decimal">
+                <constraints nullable="true"/>
+            </column>
+            <column name="employees_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>

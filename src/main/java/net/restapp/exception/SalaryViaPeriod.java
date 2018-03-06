@@ -1,7 +1,4 @@
-package net.restapp.model;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package net.restapp.exception;
 
 import java.math.BigDecimal;
 import java.util.Date;

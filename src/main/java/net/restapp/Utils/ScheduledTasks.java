@@ -25,7 +25,7 @@ public class ScheduledTasks {
         List<ArchiveSalary> archiveSalaries = archiveSalaryService.getAllViaDate(result);
 
         for (ArchiveSalary value: archiveSalaries) {
-            String mail = value.getEmployee().getEmail();
+            String mail = value.getEmployee().getUser().getEmail();
             String sendingMessage = value.getEmployee().getFirstName() + value.getEmployee().getLastName()
                                     + value.getDate() + value.getMonthSalary();
             //Тут должна быть отправка по почте

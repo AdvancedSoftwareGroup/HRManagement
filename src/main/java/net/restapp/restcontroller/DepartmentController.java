@@ -1,6 +1,5 @@
 package net.restapp.restcontroller;
 
-import net.restapp.exception.ErrorBody;
 import net.restapp.model.Department;
 import net.restapp.servise.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,6 +40,9 @@ public class DepartmentController {
         }
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
+
+
+
 
     @RequestMapping(value = "/{departmentId}",
             method = RequestMethod.DELETE,

@@ -1,11 +1,7 @@
 package net.restapp.model;
 
-
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
 import lombok.Setter;
