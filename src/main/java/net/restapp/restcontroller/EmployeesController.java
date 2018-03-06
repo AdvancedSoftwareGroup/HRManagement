@@ -82,7 +82,7 @@ public class EmployeesController {
             return myResponseRequest.notFoundRequest(request,employeeId);
         }
         employees.setId(employeeId);
-        employeesService.edit(employees);
+        employeesService.save(employees);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -110,7 +110,7 @@ public class EmployeesController {
                     request,
                     "employee id must be not null");
         }
-        employeesService.add(employees);
+        employeesService.save(employees);
 
         httpHeaders.setLocation(builder.path("/employees/getAll").buildAndExpand().toUri());
         return new ResponseEntity<>(employees, httpHeaders, HttpStatus.CREATED);

@@ -32,22 +32,21 @@ public class EmployeesServiceImpl implements EmployeesService {
 
     @Override
     @Transactional
-    public void add(Employees employees) {
-        employees.setAvailableVacationDay(0);
-        edit(employees);
-    }
-
-    @Override
-    @Transactional
-    public void edit(Employees employees) {
+    public void save (Employees employees){
         Long positionId = employees.getPosition().getId();
-        Employees databaseEmployee = repoEmployees.findAllWithPositionId(positionId);
-        if (databaseEmployee != null) {
-            if (databaseEmployee.getPosition().getId() != employees.getPosition().getId()) {
-                throw new EntityAlreadyExistException(
-                        "Employee for position with positionid=" + positionId + " already exist.");
+
+        if (employees.getId() == 0){
+            employees.setAvailableVacationDay(0);
+
+            Employees databaseEmployee = repoEmployees.findAllWithPositionId(positionId);
+            if (databaseEmployee != null) {
+                if (databaseEmployee.getPosition().getId() != employees.getPosition().getId()) {
+                    throw new EntityAlreadyExistException(
+                            "Employee for position with positionid=" + positionId + " already exist.");
+                }
             }
         }
+
         Position position = repoPosition.findOne(positionId);
         if (position == null){
             throw new EntityNotFoundException(
@@ -59,6 +58,7 @@ public class EmployeesServiceImpl implements EmployeesService {
         employees.setUser(user);
         repoEmployees.save(employees);
     }
+
 
     @Override
     @Transactional

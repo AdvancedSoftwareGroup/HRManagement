@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "archiveSalary")
+@Table(name = "archive_salary")
 @Getter
 @Setter
 public class ArchiveSalary {
@@ -22,11 +22,11 @@ public class ArchiveSalary {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "monthSalary")
+    @Column(name = "month_salary")
     private BigDecimal monthSalary;
 
     @ManyToOne
-    @JsonManagedReference
+    //@JsonManagedReference
     private Employees employee;
 
 

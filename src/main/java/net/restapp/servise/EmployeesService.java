@@ -6,9 +6,7 @@ import java.util.List;
 
 public interface EmployeesService {
 
-    void add(Employees employees);
-
-    void edit(Employees employees);
+    void save(Employees employees);
 
     void delete(Long id);
 

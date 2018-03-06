@@ -22,7 +22,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws Exception {
+        if (id < 4) throw new Exception("cant delete role with id <=3");
         log.info("In deleting role by ID{}",id);
         repoRole.delete(id);
     }
