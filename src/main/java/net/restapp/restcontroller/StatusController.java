@@ -1,4 +1,5 @@
 package net.restapp.restcontroller;
+
 import net.restapp.model.Status;
 import net.restapp.servise.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,82 +10,116 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping(value = "api/admin/status")
+@RequestMapping(value = "/status")
 public class StatusController {
 
     @Autowired
     private StatusService statusService;
 
-    //------------------Create a Status
+    private MyResponseRequest myResponseRequest = new MyResponseRequest(new Status());
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Void> createStatus(@RequestBody Status status, UriComponentsBuilder ucBuilder) {
-        System.out.println("Creating Status " + status.getName());
+    @RequestMapping(value = "/{statusId}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> getStatus(@PathVariable("statusId") Long statusId,
+                                            HttpServletRequest request) {
 
-        if (statusService.isStatusExist(status)) {
-            System.out.println("A Status with name " + status.getName() + " already exists");
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        if (statusId == null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "status id must be not null");
         }
 
-        statusService.save(status);
+        Status status = statusService.getById(statusId);
+        if (status == null) {
+            return myResponseRequest.notFoundRequest(request,statusId);
+        }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(status.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
-
 
     //------------------- Delete a Status
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Status> deleteStatuse(@PathVariable("id") long id) {
-        System.out.println("Deleting Status with id " + id);
-
-        Status status = statusService.getById(id);
-        if (status == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @RequestMapping(value = "/{statusId}",
+            method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteStatus(@PathVariable("statusId") Long statusId,
+                                                HttpServletRequest request) {
+        if ( statusId== null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "status id must be not null");
         }
+        Status status = statusService.getById(statusId);
 
-        statusService.delete(id);
+        if (status == null) {
+            return myResponseRequest.notFoundRequest(request,statusId);
+        }
+        statusService.delete(statusId);
+        if (statusService.getById(statusId) != null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "can't delete status. First you must delete employee");
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //----------------------------- Status validation
-    private Map<String, String> checkStatus(Status status){
-        Map<String, String> messages = new HashMap<String, String>();
-        String name = status.getName();
-        if (name == null || name.trim().isEmpty()){
-            messages.put("name","null or empty");
+    @RequestMapping(value = "/{statusId}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> editStatus(@PathVariable("statusId") Long statusId,
+                                                 @RequestBody @Valid Status status,
+                                                 HttpServletRequest request){
+
+        if (statusId == null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "status id must be not null");
         }
-        return messages;
+        Status status1 = statusService.getById(statusId);
+
+        if (status1 == null) {
+            return myResponseRequest.notFoundRequest(request,statusId);
+        }
+        status.setId(statusId);
+        statusService.save(status);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //-------------------Retrieve All Statuses
-
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Status>> getAllStatuses() {
-        List<Status> statuses = this.statusService.getAll();
-
-        if (statuses.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @RequestMapping(value = "/getAll",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> getAllStatus(HttpServletRequest request){
+        List<Status> statusList = statusService.getAll();
+        if (statusList.isEmpty()) {
+            return myResponseRequest.notFoundRequest(request,null);
         }
-        return new ResponseEntity<>(statuses, HttpStatus.OK);
+        return new ResponseEntity<>(statusList,HttpStatus.OK);
     }
 
-    //-------------------Retrieve Single Status
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Status> getStatus(@PathVariable("id") long id) {
-        Status status = statusService.getById(id);
-        if (status == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @RequestMapping(value = "/add",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> saveStatus(@RequestBody @Valid Status status,
+                                                 UriComponentsBuilder builder,
+                                                 HttpServletRequest request){
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        if (status == null){
+            return myResponseRequest.bedRequest(
+                    request,
+                    "status id must be not null");
         }
-        return new ResponseEntity<>(status, HttpStatus.OK);
+        statusService.save(status);
+
+        httpHeaders.setLocation(builder.path("/status/getAll").buildAndExpand().toUri());
+        return new ResponseEntity<>(status,httpHeaders,HttpStatus.CREATED);
     }
+
+
 }

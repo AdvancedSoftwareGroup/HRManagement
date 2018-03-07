@@ -16,7 +16,8 @@ public class RoleServiceImpl implements RoleService {
     RepoRole repoRole;
 
     @Override
-    public void save(Role role) {
+    public void save(Role role) throws Exception {
+        if (role.getId() < 4) throw new Exception("cant change role with id <=3");
         repoRole.save(role);
         log.info("In save ");
     }
