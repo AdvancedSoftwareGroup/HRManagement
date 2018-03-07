@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/event")
+@Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
 public class EventController {
 
     @Autowired
@@ -85,17 +87,6 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/getAll",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllDepartment(HttpServletRequest request){
-        List<Event> listEvent = eventService.getAll();
-        if (listEvent.isEmpty()) {
-            return myResponseRequest.notFoundRequest(request,null);
-        }
-        return new ResponseEntity<>(listEvent,HttpStatus.OK);
-    }
-
 
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
@@ -115,6 +106,20 @@ public class EventController {
         httpHeaders.setLocation(builder.path("/event/getAll").buildAndExpand().toUri());
         return new ResponseEntity<>(event,httpHeaders,HttpStatus.CREATED);
     }
+
+    @RequestMapping(value = "/getAll",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> getAllDepartment(HttpServletRequest request){
+        List<Event> listEvent = eventService.getAll();
+        if (listEvent.isEmpty()) {
+            return myResponseRequest.notFoundRequest(request,null);
+        }
+        return new ResponseEntity<>(listEvent,HttpStatus.OK);
+    }
+
+
+
 
 
 }

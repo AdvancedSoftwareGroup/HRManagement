@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/department")
+@Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
 public class DepartmentController {
 
     @Autowired

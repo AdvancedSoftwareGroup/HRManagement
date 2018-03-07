@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/status")
+@Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
 public class StatusController {
 
     @Autowired
@@ -48,7 +50,7 @@ public class StatusController {
     @RequestMapping(value = "/{statusId}",
             method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteStatus(@PathVariable("statusId") Long statusId,
-                                                HttpServletRequest request) {
+                                                HttpServletRequest request) throws Exception {
         if ( statusId== null){
             return myResponseRequest.bedRequest(
                     request,
@@ -73,7 +75,7 @@ public class StatusController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> editStatus(@PathVariable("statusId") Long statusId,
                                                  @RequestBody @Valid Status status,
-                                                 HttpServletRequest request){
+                                                 HttpServletRequest request) throws Exception {
 
         if (statusId == null){
             return myResponseRequest.bedRequest(
@@ -107,7 +109,7 @@ public class StatusController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> saveStatus(@RequestBody @Valid Status status,
                                                  UriComponentsBuilder builder,
-                                                 HttpServletRequest request){
+                                                 HttpServletRequest request) throws Exception {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         if (status == null){

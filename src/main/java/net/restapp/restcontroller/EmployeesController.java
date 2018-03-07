@@ -1,12 +1,19 @@
 package net.restapp.restcontroller;
 
 import net.restapp.model.Employees;
+import net.restapp.model.User;
 import net.restapp.servise.EmployeesService;
+import net.restapp.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,35 +28,24 @@ public class EmployeesController {
     @Autowired
     EmployeesService employeesService;
 
+    @Autowired
+    UserService userService;
+
     MyResponseRequest myResponseRequest = new MyResponseRequest(new Employees());
 
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> getEmployee(@PathVariable("employeeId") Long employeeId,
-                                                HttpServletRequest request){
+                                              HttpServletRequest request) {
 
-        if (employeeId == null){
-            return myResponseRequest.bedRequest(
-                    request,
-                    "employee id must be not null");
+        if (request.isUserInRole("ROLE_USER")) {
+            if (!checkLoginUserHavePetitionForThisInfo(employeeId, request)) {
+                throw new AccessDeniedException("You don't have permit to get iformation about emploee with id=" + employeeId);
+            }
         }
-        Employees employees =  employeesService.getById(employeeId);
-
-        if (employees == null) {
-            return myResponseRequest.notFoundRequest(request,employeeId);
-        }
-        return new ResponseEntity<>(employees, HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/{employeeId}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deleteEmployee(@PathVariable("employeeId") Long employeeId,
-                                                   HttpServletRequest request){
-
-        if (employeeId == null){
+        if (employeeId == null) {
             return myResponseRequest.bedRequest(
                     request,
                     "employee id must be not null");
@@ -57,21 +53,43 @@ public class EmployeesController {
         Employees employees = employeesService.getById(employeeId);
 
         if (employees == null) {
-            return myResponseRequest.notFoundRequest(request,employeeId);
+            return myResponseRequest.notFoundRequest(request, employeeId);
+        }
+        return new ResponseEntity<>(employees, HttpStatus.OK);
+    }
+
+
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @RequestMapping(value = "/{employeeId}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> deleteEmployee(@PathVariable("employeeId") Long employeeId,
+                                                 HttpServletRequest request) {
+
+        if (employeeId == null) {
+            return myResponseRequest.bedRequest(
+                    request,
+                    "employee id must be not null");
+        }
+        Employees employees = employeesService.getById(employeeId);
+
+        if (employees == null) {
+            return myResponseRequest.notFoundRequest(request, employeeId);
         }
         employeesService.delete(employeeId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> editEmployee(@PathVariable("employeeId") Long employeeId,
-                                                 @RequestBody @Valid Employees employees,
-                                                 HttpServletRequest request){
+                                               @RequestBody @Valid Employees employees,
+                                               HttpServletRequest request) {
 
-        if (employeeId == null){
+        if (employeeId == null) {
             return myResponseRequest.bedRequest(
                     request,
                     "employee id must be not null");
@@ -79,33 +97,35 @@ public class EmployeesController {
         Employees employees1 = employeesService.getById(employeeId);
 
         if (employees1 == null) {
-            return myResponseRequest.notFoundRequest(request,employeeId);
+            return myResponseRequest.notFoundRequest(request, employeeId);
         }
         employees.setId(employeeId);
         employeesService.save(employees);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllEmployees(HttpServletRequest request){
+    public ResponseEntity<Object> getAllEmployees(HttpServletRequest request) {
         List<Employees> employees = employeesService.getAll();
         if (employees.isEmpty()) {
-            return myResponseRequest.notFoundRequest(request,null);
+            return myResponseRequest.notFoundRequest(request, null);
         }
-        return new ResponseEntity<>(employees,HttpStatus.OK);
+        return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> saveEmployee(@RequestBody @Valid Employees employees,
-                                                 UriComponentsBuilder builder,
-                                                 HttpServletRequest request){
+                                               UriComponentsBuilder builder,
+                                               HttpServletRequest request) {
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        if (employees == null){
+        if (employees == null) {
             return myResponseRequest.bedRequest(
                     request,
                     "employee id must be not null");
@@ -116,5 +136,9 @@ public class EmployeesController {
         return new ResponseEntity<>(employees, httpHeaders, HttpStatus.CREATED);
     }
 
-
+    private boolean checkLoginUserHavePetitionForThisInfo(Long employeeId, HttpServletRequest request) {
+        String email=request.getUserPrincipal().getName();
+        User user = userService.findByEmail(email);
+        return user.getId() == employeeId;
+    }
 }
