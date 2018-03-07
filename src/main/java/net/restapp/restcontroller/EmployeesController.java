@@ -32,7 +32,7 @@ public class EmployeesController {
         if (employeeId == null){
             return myResponseRequest.bedRequest(
                     request,
-                    "employee id must be not null");
+                    "employees id must be not null");
         }
         Employees employees =  employeesService.getById(employeeId);
 
@@ -52,7 +52,7 @@ public class EmployeesController {
         if (employeeId == null){
             return myResponseRequest.bedRequest(
                     request,
-                    "employee id must be not null");
+                    "employees id must be not null");
         }
         Employees employees = employeesService.getById(employeeId);
 
@@ -74,7 +74,7 @@ public class EmployeesController {
         if (employeeId == null){
             return myResponseRequest.bedRequest(
                     request,
-                    "employee id must be not null");
+                    "employees id must be not null");
         }
         Employees employees1 = employeesService.getById(employeeId);
 
@@ -108,7 +108,7 @@ public class EmployeesController {
         if (employees == null){
             return myResponseRequest.bedRequest(
                     request,
-                    "employee id must be not null");
+                    "employees id must be not null");
         }
         employeesService.add(employees);
 

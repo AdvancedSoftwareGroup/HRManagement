@@ -1,7 +1,7 @@
 package net.restapp.restcontroller;
 import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Employees;
-import net.restapp.repository.RepoArchiveSalary;
+import net.restapp.model.Position;
 import net.restapp.repository.RepoEmployees;
 import net.restapp.servise.ArchiveSalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,7 @@ public class ArchiveSalaryController {
                                                            @PathVariable("employeeId") Long employeeId) {
         if (startDate == null || endDate == null || employeeId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         }
 
         Employees employees = repoEmployees.findOne(employeeId);
@@ -83,11 +84,17 @@ public class ArchiveSalaryController {
         ArchiveSalary archiveSalary = new ArchiveSalary();
 
         Date date = new Date(1900, 3, 1);
-
-        Employees employees = repoEmployees.findOne(1l);
+        Employees employees = new Employees();
+        employees.setFirstName("Ivan");
+        employees.setLastName("Ivanov");
+        Position position = new Position();
+        position.setName("Java");
+        employees.setPosition(position);
+        repoEmployees.save(employees);
+        Employees employees2 = repoEmployees.findOne(1l);
         archiveSalary.setDate(date);
         archiveSalary.setMonthSalary(new BigDecimal(70000));
-        archiveSalary.setEmployee(employees);
+        archiveSalary.setEmployees(employees2);
 
         repoArchiveSalary.save(archiveSalary);
 

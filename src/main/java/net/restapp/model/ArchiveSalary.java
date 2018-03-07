@@ -1,6 +1,5 @@
 package net.restapp.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "archiveSalary")
+@Table(name = "archive_salary")
 @Getter
 @Setter
 public class ArchiveSalary {
@@ -22,19 +21,19 @@ public class ArchiveSalary {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "monthSalary")
+    @Column(name = "month_salary")
     private BigDecimal monthSalary;
 
     @ManyToOne
-    @JsonManagedReference
-    private Employees employee;
+//    @Column(name = "employee_id")
+    private Employees employees;
 
 
     @Override
     public String toString() {
         return "ArchiveSalary{" +
                 "id=" + id +
-                ", employee=" + employee +
+                ", employees=" + employees +
                 ", date=" + date +
                 ", monthSalary=" + monthSalary +
                 '}';

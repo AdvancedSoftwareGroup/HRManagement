@@ -65,7 +65,7 @@
                                  onDelete="NO ACTION"/>
     </changeSet>
     <changeSet id="8" author="Anulich Svitlana">
-        <addForeignKeyConstraint baseTableName="archiveSalary" baseColumnNames="employees_id"
+        <addForeignKeyConstraint baseTableName="archive_salary" baseColumnNames="employees_id"
                                  constraintName="fk_archiveSalary_employees_id"
                                  referencedTableName="employees"
                                  referencedColumnNames="id"

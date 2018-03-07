@@ -64,7 +64,7 @@ public class DepartmentController {
         if (departmentService.getById(departmentId) != null){
             return myResponseRequest.bedRequest(
                     request,
-                    "can't delete position. First you must delete employee");
+                    "can't delete position. First you must delete employees");
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

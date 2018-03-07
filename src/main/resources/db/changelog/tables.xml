@@ -151,14 +151,14 @@
     </changeSet>
 
     <changeSet id="11" author="Anulich Svitlana">
-        <createTable tableName="archiveSalary">
+        <createTable tableName="archive_salary">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="monthSalary" type="decimal">
+            <column name="month_salary" type="decimal">
                 <constraints nullable="true"/>
             </column>
             <column name="employees_id" type="bigint">
@@ -166,5 +166,4 @@
             </column>
         </createTable>
     </changeSet>
-
 </databaseChangeLog>
