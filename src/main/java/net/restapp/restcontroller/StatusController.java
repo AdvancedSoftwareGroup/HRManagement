@@ -1,5 +1,7 @@
 package net.restapp.restcontroller;
 
+import net.restapp.exception.EntityNullException;
+import net.restapp.exception.PathVariableNullException;
 import net.restapp.model.Status;
 import net.restapp.servise.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -23,23 +26,21 @@ public class StatusController {
     @Autowired
     private StatusService statusService;
 
-    private MyResponseRequest myResponseRequest = new MyResponseRequest(new Status());
 
     @RequestMapping(value = "/{statusId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getStatus(@PathVariable("statusId") Long statusId,
-                                            HttpServletRequest request) {
+    public ResponseEntity<Object> getStatus(@PathVariable("statusId") Long statusId) {
 
-        if (statusId == null){
-            return myResponseRequest.bedRequest(
-                    request,
-                    "status id must be not null");
+        if (statusId == null) {
+            String msg = "PathVariable can't be null ";
+            throw new PathVariableNullException(msg);
         }
 
         Status status = statusService.getById(statusId);
         if (status == null) {
-            return myResponseRequest.notFoundRequest(request,statusId);
+            String msg = String.format("There is no position with id: %d", statusId);
+            throw new EntityNotFoundException(msg);
         }
 
         return new ResponseEntity<>(status, HttpStatus.OK);
@@ -49,24 +50,19 @@ public class StatusController {
 
     @RequestMapping(value = "/{statusId}",
             method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteStatus(@PathVariable("statusId") Long statusId,
-                                                HttpServletRequest request) throws Exception {
-        if ( statusId== null){
-            return myResponseRequest.bedRequest(
-                    request,
-                    "status id must be not null");
+    public ResponseEntity<Object> deleteStatus(@PathVariable("statusId") Long statusId) throws Exception {
+        if (statusId == null) {
+            String msg = "PathVariable can't be null ";
+            throw new PathVariableNullException(msg);
         }
         Status status = statusService.getById(statusId);
 
         if (status == null) {
-            return myResponseRequest.notFoundRequest(request,statusId);
+            String msg = String.format("There is no position with id: %d", statusId);
+            throw new EntityNotFoundException(msg);
         }
         statusService.delete(statusId);
-        if (statusService.getById(statusId) != null){
-            return myResponseRequest.bedRequest(
-                    request,
-                    "can't delete status. First you must delete employee");
-        }
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -74,18 +70,20 @@ public class StatusController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> editStatus(@PathVariable("statusId") Long statusId,
-                                                 @RequestBody @Valid Status status,
-                                                 HttpServletRequest request) throws Exception {
+                                                 @RequestBody @Valid Status status) throws Exception {
 
-        if (statusId == null){
-            return myResponseRequest.bedRequest(
-                    request,
-                    "status id must be not null");
+        if (statusId == null) {
+            String msg = "PathVariable can't be null ";
+            throw new PathVariableNullException(msg);
         }
         Status status1 = statusService.getById(statusId);
 
         if (status1 == null) {
-            return myResponseRequest.notFoundRequest(request,statusId);
+            String msg = String.format("There is no position with id: %d", statusId);
+            throw new EntityNotFoundException(msg);
+        }
+        if (status == null) {
+            throw new EntityNullException("status can't be null");
         }
         status.setId(statusId);
         statusService.save(status);
@@ -95,10 +93,11 @@ public class StatusController {
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllStatus(HttpServletRequest request){
+    public ResponseEntity<Object> getAllStatus(){
         List<Status> statusList = statusService.getAll();
         if (statusList.isEmpty()) {
-            return myResponseRequest.notFoundRequest(request,null);
+            String msg = "There is no status in database ";
+            throw new EntityNotFoundException(msg);
         }
         return new ResponseEntity<>(statusList,HttpStatus.OK);
     }
@@ -108,14 +107,11 @@ public class StatusController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> saveStatus(@RequestBody @Valid Status status,
-                                                 UriComponentsBuilder builder,
-                                                 HttpServletRequest request) throws Exception {
+                                                 UriComponentsBuilder builder) throws Exception {
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        if (status == null){
-            return myResponseRequest.bedRequest(
-                    request,
-                    "status id must be not null");
+        if (status == null) {
+            throw new EntityNullException("status can't be null");
         }
         statusService.save(status);
 

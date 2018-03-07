@@ -1,5 +1,7 @@
 package net.restapp.restcontroller;
 
+import net.restapp.exception.EntityNullException;
+import net.restapp.exception.PathVariableNullException;
 import net.restapp.model.Employees;
 import net.restapp.model.User;
 import net.restapp.servise.EmployeesService;
@@ -11,12 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -31,7 +31,6 @@ public class EmployeesController {
     @Autowired
     UserService userService;
 
-    MyResponseRequest myResponseRequest = new MyResponseRequest(new Employees());
 
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
     @RequestMapping(value = "/{employeeId}",
@@ -45,15 +44,15 @@ public class EmployeesController {
                 throw new AccessDeniedException("You don't have permit to get iformation about emploee with id=" + employeeId);
             }
         }
-        if (employeeId == null) {
-            return myResponseRequest.bedRequest(
-                    request,
-                    "employee id must be not null");
+        if (employeeId == null){
+            String msg = "PathVariable can't be null ";
+            throw new PathVariableNullException(msg);
         }
         Employees employees = employeesService.getById(employeeId);
 
         if (employees == null) {
-            return myResponseRequest.notFoundRequest(request, employeeId);
+            String msg = String.format("There is no employee with id: %d", employeeId);
+            throw new EntityNotFoundException(msg);
         }
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
@@ -66,15 +65,15 @@ public class EmployeesController {
     public ResponseEntity<Object> deleteEmployee(@PathVariable("employeeId") Long employeeId,
                                                  HttpServletRequest request) {
 
-        if (employeeId == null) {
-            return myResponseRequest.bedRequest(
-                    request,
-                    "employee id must be not null");
+        if (employeeId == null){
+            String msg = "PathVariable can't be null ";
+            throw new PathVariableNullException(msg);
         }
         Employees employees = employeesService.getById(employeeId);
 
         if (employees == null) {
-            return myResponseRequest.notFoundRequest(request, employeeId);
+            String msg = String.format("There is no employee with id: %d", employeeId);
+            throw new EntityNotFoundException(msg);
         }
         employeesService.delete(employeeId);
 
@@ -86,19 +85,19 @@ public class EmployeesController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> editEmployee(@PathVariable("employeeId") Long employeeId,
-                                               @RequestBody @Valid Employees employees,
-                                               HttpServletRequest request) {
+                                               @RequestBody @Valid Employees employees) {
 
-        if (employeeId == null) {
-            return myResponseRequest.bedRequest(
-                    request,
-                    "employee id must be not null");
+        if (employeeId == null){
+            String msg = "PathVariable can't be null ";
+            throw new PathVariableNullException(msg);
         }
         Employees employees1 = employeesService.getById(employeeId);
 
         if (employees1 == null) {
-            return myResponseRequest.notFoundRequest(request, employeeId);
+            String msg = String.format("There is no employee with id: %d", employeeId);
+            throw new EntityNotFoundException(msg);
         }
+
         employees.setId(employeeId);
         employeesService.save(employees);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -108,10 +107,10 @@ public class EmployeesController {
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllEmployees(HttpServletRequest request) {
+    public ResponseEntity<Object> getAllEmployees() {
         List<Employees> employees = employeesService.getAll();
         if (employees.isEmpty()) {
-            return myResponseRequest.notFoundRequest(request, null);
+            throw new EntityNotFoundException();
         }
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
@@ -121,14 +120,11 @@ public class EmployeesController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> saveEmployee(@RequestBody @Valid Employees employees,
-                                               UriComponentsBuilder builder,
-                                               HttpServletRequest request) {
+                                               UriComponentsBuilder builder) {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         if (employees == null) {
-            return myResponseRequest.bedRequest(
-                    request,
-                    "employee id must be not null");
+            throw new EntityNullException("employee can't be null");
         }
         employeesService.save(employees);
 
