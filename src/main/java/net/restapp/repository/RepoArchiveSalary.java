@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.List;
 @Repository
 public interface RepoArchiveSalary extends JpaRepository <ArchiveSalary, Long> {
-    @Query("select u FROM ArchiveSalary u where u.date between ?1 and ?2 and u.employees = ?3")
+    @Query("select u FROM ArchiveSalary u where u.date between ?1 and ?2 and u.employee = ?3")
     List<ArchiveSalary> findDateBetween(Date startDate, Date endDate, Employees employee);
 
-    @Query("select u FROM ArchiveSalary u where u.date =?1 and u.employees = ?2")
+    @Query("select u FROM ArchiveSalary u where u.date =?1 and u.employee = ?2")
     ArchiveSalary findSalaryViaDate(Date salaryDate, Employees employee);
 
     List<ArchiveSalary> getAllByDate(Date date);

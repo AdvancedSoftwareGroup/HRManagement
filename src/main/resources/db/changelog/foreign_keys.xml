@@ -64,9 +64,9 @@
                                  onUpdate="CASCADE"
                                  onDelete="NO ACTION"/>
     </changeSet>
-    <changeSet id="8" author="Anulich Svitlana">
-        <addForeignKeyConstraint baseTableName="archive_salary" baseColumnNames="employees_id"
-                                 constraintName="fk_archiveSalary_employees_id"
+    <changeSet id="13" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="archive_salary" baseColumnNames="employee_id"
+                                 constraintName="fk_archive_salary_employee_id"
                                  referencedTableName="employees"
                                  referencedColumnNames="id"
                                  onUpdate="CASCADE"

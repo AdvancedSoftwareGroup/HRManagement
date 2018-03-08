@@ -61,7 +61,6 @@ public class EmployeesJsonSerializer extends JsonSerializer<Employees> {
         } else {
             jsonGenerator.writeNullField("position");
         }
-
         if (employees.getArchiveSalary() != null) {
             jsonGenerator.writeArrayFieldStart("archiveSalary");
             for(ArchiveSalary archiveSalary: employees.getArchiveSalary()) {

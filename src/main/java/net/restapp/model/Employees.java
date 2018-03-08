@@ -49,7 +49,8 @@ public class Employees {
     @JoinColumn(name = "position_id")
     private Position position;
 
-    @OneToMany(mappedBy = "employees")
+    @OneToMany(mappedBy = "employee")
+    @JsonBackReference
     private  List<ArchiveSalary> archiveSalary;
 
     @OneToMany(mappedBy = "employees")

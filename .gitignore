@@ -28,4 +28,4 @@ hs_err_pid*
 src/main/resources/application-dev.properties
 /target/
 src/main/resources/db/dropDB.sql
-src/main/resouces/db/insertDBdata.sql
+src/main/resources/db/insertDBdata.sql
