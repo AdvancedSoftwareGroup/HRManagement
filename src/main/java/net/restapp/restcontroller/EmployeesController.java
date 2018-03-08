@@ -1,7 +1,9 @@
 package net.restapp.restcontroller;
 
+import io.swagger.annotations.*;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
+import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Employees;
 import net.restapp.model.User;
 import net.restapp.servise.EmployeesService;
@@ -23,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
+@Api(value="aemployee", description="Operations pertaining to employee in HRManagement")
 public class EmployeesController {
 
     @Autowired
@@ -31,12 +34,20 @@ public class EmployeesController {
     @Autowired
     UserService userService;
 
+    @ApiOperation(value = "View employee by ID", response = ArchiveSalary.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved employee"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the employee by id"),
+            @ApiResponse(code = 403, message = "Accessing the employee by id you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The employee you were trying to reach is not found")
+    })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
 
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getEmployee(@PathVariable("employeeId") Long employeeId,
+    public ResponseEntity<Object> getEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
                                               HttpServletRequest request) {
 
         if (request.isUserInRole("ROLE_USER")) {
@@ -57,12 +68,20 @@ public class EmployeesController {
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete employee by ID", response = ArchiveSalary.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Employee successfully deleted"),
+            @ApiResponse(code = 401, message = "You are not authorized to delete employee"),
+            @ApiResponse(code = 403, message = "Accessing deletion the employee you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The employee you were trying to reach is not found")
+    })
 
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deleteEmployee(@PathVariable("employeeId") Long employeeId) {
+    public ResponseEntity<Object> deleteEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
+                                                 HttpServletRequest request) {
 
         if (employeeId == null){
             String msg = "PathVariable can't be null ";
@@ -78,13 +97,19 @@ public class EmployeesController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    @ApiOperation(value = "Update employee by ID", response = ArchiveSalary.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Employee successfully updated"),
+            @ApiResponse(code = 401, message = "You are not authorized to update employee"),
+            @ApiResponse(code = 403, message = "Accessing updating the employee you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The employee you were trying to reach is not found")
+    })
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> editEmployee(@PathVariable("employeeId") Long employeeId,
-                                               @RequestBody @Valid Employees employees) {
+    public ResponseEntity<Object> editEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
+                                               @ApiParam(value = "json body of Employee", required = true) @RequestBody @Valid Employees employees) {
 
         if (employeeId == null){
             String msg = "PathVariable can't be null ";
@@ -95,16 +120,25 @@ public class EmployeesController {
         if (employees1 == null) {
             String msg = String.format("There is no employee with id: %d", employeeId);
             throw new EntityNotFoundException(msg);
+            String msg = String.format("There is no employee with id: %d", employeeId);
+            throw new EntityNotFoundException(msg);
         }
 
         if (employees == null) {
             throw new EntityNullException("position can't be null");
         }
+
         employees.setId(employeeId);
         employeesService.save(employees);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    @ApiOperation(value = "Retrieve all employees", response = ArchiveSalary.class, responseContainer="List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Employee successfully updated"),
+            @ApiResponse(code = 401, message = "You are not authorized to update employee"),
+            @ApiResponse(code = 403, message = "Accessing updating the employee you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The employee you were trying to reach is not found")
+    })
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
@@ -116,12 +150,18 @@ public class EmployeesController {
         }
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
-
+    @ApiOperation(value = "Create employee", response = ArchiveSalary.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Employee successfully created"),
+            @ApiResponse(code = 401, message = "You are not authorized to create employee"),
+            @ApiResponse(code = 403, message = "Accessing creating the employee you were trying to reach is forbidden"),
+            @ApiResponse(code = 400, message = "request is not correct")
+    })
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> saveEmployee(@RequestBody @Valid Employees employees,
+    public ResponseEntity<Object> saveEmployee(@ApiParam(value = "json body of Employee", required = true) @RequestBody @Valid Employees employees,
                                                UriComponentsBuilder builder) {
         HttpHeaders httpHeaders = new HttpHeaders();
 

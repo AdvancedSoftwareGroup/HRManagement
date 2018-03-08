@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/**").authenticated()
-                //.antMatchers("/**").permitAll()
+               //.antMatchers("/**").permitAll()
                 .and()
                 .httpBasic().realmName("REALM").authenticationEntryPoint(basicAuthenticationEntryPoint())
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

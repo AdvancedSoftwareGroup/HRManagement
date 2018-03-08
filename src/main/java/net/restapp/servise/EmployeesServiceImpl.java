@@ -8,7 +8,6 @@ import net.restapp.repository.RepoEmployees;
 import net.restapp.repository.RepoPosition;
 import net.restapp.repository.RepoUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -31,11 +30,9 @@ public class EmployeesServiceImpl implements EmployeesService {
     @Autowired
     RepoPosition repoPosition;
 
-
     @Override
     @Transactional
     public void save (Employees employees){
-
         Long positionId = employees.getPosition().getId();
         Position position = repoPosition.findOne(positionId);
         if (position == null){
@@ -43,6 +40,7 @@ public class EmployeesServiceImpl implements EmployeesService {
                     "position with id="+positionId+" don't exist at database. " +
                             "Please, create it or select another one.");
         }
+
 
         if (employees.getId() == 0){
             //vacation day for first half a year equals 0;
@@ -64,7 +62,6 @@ public class EmployeesServiceImpl implements EmployeesService {
         employees.setUser(user);
         repoEmployees.save(employees);
     }
-
 
     @Override
     @Transactional

@@ -1,6 +1,8 @@
 package net.restapp.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,22 +15,25 @@ import java.util.Date;
 @Table(name = "archive_salary")
 @Getter
 @Setter
+@ApiModel
 @EqualsAndHashCode(exclude = "employee")
 public class ArchiveSalary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @ApiModelProperty(notes = "The database generated ID for archive salary entry")
     private long id;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date")
+    @ApiModelProperty(notes = "Date of record salary entry to archive")
     private Date date;
 
     @Column(name = "month_salary")
+    @ApiModelProperty(notes = "Total salary in current month")
     private BigDecimal monthSalary;
 
     @ManyToOne
-    //@JsonManagedReference
     private Employees employee;
 
 

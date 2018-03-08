@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class HRManagementApp {
 
     public static void main(String[] args) {
-
         SpringApplication.run(HRManagementApp.class, args);
     }
 }

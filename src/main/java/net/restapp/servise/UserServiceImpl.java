@@ -30,6 +30,18 @@ public class UserServiceImpl implements UserService {
             }
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null){
+            user.setRole(repoRole.getOne(2L));
+        }
+
+    public void save(User user) throws EntityAlreadyExistException {
+        if (user.getId() == 0){
+            if (emailExist(user.getEmail())) {
+                throw new EntityAlreadyExistException(
+                        "There is an account with that email address:" + user.getEmail() +" exist at database");
+            }
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setPassword(user.getPassword());
         if (user.getRole() == null){
             user.setRole(repoRole.getOne(2L));
@@ -63,6 +75,7 @@ public class UserServiceImpl implements UserService {
         User user = repoUser.findByEmail(email);
         return  (user != null);
     }
+
 
 
 
