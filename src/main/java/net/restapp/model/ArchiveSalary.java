@@ -1,6 +1,7 @@
 package net.restapp.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 @Table(name = "archive_salary")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "employee")
 public class ArchiveSalary {
 
     @Id

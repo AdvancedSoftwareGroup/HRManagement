@@ -18,8 +18,8 @@ public class EmployeesJsonSerializer extends JsonSerializer<Employees> {
 
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", employees.getId());
-        jsonGenerator.writeStringField("first_name", employees.getFirstName());
-        jsonGenerator.writeStringField("last_name", employees.getLastName());
+        jsonGenerator.writeStringField("firstName", employees.getFirstName());
+        jsonGenerator.writeStringField("lastName", employees.getLastName());
         jsonGenerator.writeNumberField("availableVacationDay", employees.getAvailableVacationDay());
         jsonGenerator.writeNumberField("experience", employees.getExperience());
         jsonGenerator.writeStringField("startWorkingDate", employees.getStartWorkingDate().toString());

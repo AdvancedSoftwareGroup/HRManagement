@@ -1,6 +1,7 @@
 package net.restapp.model;
 
 import com.sun.istack.internal.Nullable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 @Table(name = "position")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Position {
 
     @Id

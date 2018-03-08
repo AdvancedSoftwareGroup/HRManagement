@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         if (user.getRole() == null){
             user.setRole(repoRole.getOne(2L));
         }
@@ -62,4 +63,7 @@ public class UserServiceImpl implements UserService {
         User user = repoUser.findByEmail(email);
         return  (user != null);
     }
+
+
+
 }

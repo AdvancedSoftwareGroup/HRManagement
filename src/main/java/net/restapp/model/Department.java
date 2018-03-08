@@ -1,6 +1,7 @@
 package net.restapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
@@ -15,6 +16,7 @@ import java.util.List;
 @Table(name = "department")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "positions")
 public class Department {
 
     @Id

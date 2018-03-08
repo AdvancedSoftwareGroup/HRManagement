@@ -8,6 +8,7 @@ import net.restapp.repository.RepoEmployees;
 import net.restapp.repository.RepoPosition;
 import net.restapp.repository.RepoUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -30,14 +31,25 @@ public class EmployeesServiceImpl implements EmployeesService {
     @Autowired
     RepoPosition repoPosition;
 
+
     @Override
     @Transactional
     public void save (Employees employees){
+
         Long positionId = employees.getPosition().getId();
+        Position position = repoPosition.findOne(positionId);
+        if (position == null){
+            throw new EntityNotFoundException(
+                    "position with id="+positionId+" don't exist at database. " +
+                            "Please, create it or select another one.");
+        }
 
         if (employees.getId() == 0){
+            //vacation day for first half a year equals 0;
             employees.setAvailableVacationDay(0);
-
+            //when employee add to the system password=11111. Then employee change pass by himself
+            User user = employees.getUser();
+            user.setPassword("11111");
             Employees databaseEmployee = repoEmployees.findAllWithPositionId(positionId);
             if (databaseEmployee != null) {
                 if (databaseEmployee.getPosition().getId() != employees.getPosition().getId()) {
@@ -45,15 +57,9 @@ public class EmployeesServiceImpl implements EmployeesService {
                             "Employee for position with positionid=" + positionId + " already exist.");
                 }
             }
+            userService.save(employees.getUser());
         }
 
-        Position position = repoPosition.findOne(positionId);
-        if (position == null){
-            throw new EntityNotFoundException(
-                    "position with id="+positionId+" don't exist at database. " +
-                            "Please, create it or select another one.");
-        }
-        userService.save(employees.getUser());
         User user = userService.findByEmail(employees.getUser().getEmail());
         employees.setUser(user);
         repoEmployees.save(employees);

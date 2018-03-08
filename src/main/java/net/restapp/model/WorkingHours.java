@@ -1,5 +1,6 @@
 package net.restapp.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "workinghours")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class WorkingHours {
 
     @Id

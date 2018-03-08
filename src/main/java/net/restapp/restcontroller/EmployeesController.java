@@ -62,8 +62,7 @@ public class EmployeesController {
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deleteEmployee(@PathVariable("employeeId") Long employeeId,
-                                                 HttpServletRequest request) {
+    public ResponseEntity<Object> deleteEmployee(@PathVariable("employeeId") Long employeeId) {
 
         if (employeeId == null){
             String msg = "PathVariable can't be null ";
@@ -98,6 +97,9 @@ public class EmployeesController {
             throw new EntityNotFoundException(msg);
         }
 
+        if (employees == null) {
+            throw new EntityNullException("position can't be null");
+        }
         employees.setId(employeeId);
         employeesService.save(employees);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

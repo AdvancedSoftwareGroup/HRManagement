@@ -1,5 +1,6 @@
 package net.restapp.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
@@ -14,6 +15,7 @@ import java.util.List;
 @Table(name = "event")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "workingHoursList")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

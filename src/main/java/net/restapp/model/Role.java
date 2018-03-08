@@ -1,6 +1,7 @@
 package net.restapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
@@ -14,6 +15,7 @@ import java.util.List;
 @Table(name = "roles")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "userList")
 public class Role {
 
     @Id
@@ -27,5 +29,6 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
+    @JsonIgnore
     List<User> userList;
 }
