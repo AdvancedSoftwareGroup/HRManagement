@@ -1,5 +1,9 @@
 package net.restapp.restcontroller;
 
+import io.swagger.annotations.*;
+import net.restapp.exception.EntityNullException;
+import net.restapp.exception.PathVariableNullException;
+import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Department;
 import net.restapp.servise.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;

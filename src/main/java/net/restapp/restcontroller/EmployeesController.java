@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
-@Api(value="aemployee", description="Operations pertaining to employee in HRManagement")
+@Api(value="employee", description="Operations pertaining to employee in HRManagement")
 public class EmployeesController {
 
     @Autowired
@@ -42,17 +42,15 @@ public class EmployeesController {
             @ApiResponse(code = 404, message = "The employee you were trying to reach is not found")
     })
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
-
-    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
+    public ResponseEntity<Employees> getEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
                                               HttpServletRequest request) {
 
         if (request.isUserInRole("ROLE_USER")) {
             if (!checkLoginUserHavePetitionForThisInfo(employeeId, request)) {
-                throw new AccessDeniedException("You don't have permit to get iformation about emploee with id=" + employeeId);
+                throw new AccessDeniedException("You don't have permit to get iformation about employee with id=" + employeeId);
             }
         }
         if (employeeId == null){
@@ -80,8 +78,7 @@ public class EmployeesController {
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deleteEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
-                                                 HttpServletRequest request) {
+    public ResponseEntity<Employees> deleteEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId) {
 
         if (employeeId == null){
             String msg = "PathVariable can't be null ";
@@ -108,7 +105,7 @@ public class EmployeesController {
     @RequestMapping(value = "/{employeeId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> editEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
+    public ResponseEntity<Employees> editEmployee(@ApiParam(value = "id of Employee", required = true) @PathVariable("employeeId") Long employeeId,
                                                @ApiParam(value = "json body of Employee", required = true) @RequestBody @Valid Employees employees) {
 
         if (employeeId == null){
@@ -120,8 +117,7 @@ public class EmployeesController {
         if (employees1 == null) {
             String msg = String.format("There is no employee with id: %d", employeeId);
             throw new EntityNotFoundException(msg);
-            String msg = String.format("There is no employee with id: %d", employeeId);
-            throw new EntityNotFoundException(msg);
+
         }
 
         if (employees == null) {
@@ -143,7 +139,7 @@ public class EmployeesController {
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllEmployees() {
+    public ResponseEntity<List<Employees>> getAllEmployees() {
         List<Employees> employees = employeesService.getAll();
         if (employees.isEmpty()) {
             throw new EntityNotFoundException();
@@ -161,7 +157,7 @@ public class EmployeesController {
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> saveEmployee(@ApiParam(value = "json body of Employee", required = true) @RequestBody @Valid Employees employees,
+    public ResponseEntity<Employees> saveEmployee(@ApiParam(value = "json body of Employee", required = true) @RequestBody @Valid Employees employees,
                                                UriComponentsBuilder builder) {
         HttpHeaders httpHeaders = new HttpHeaders();
 

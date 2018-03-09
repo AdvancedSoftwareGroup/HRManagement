@@ -1,7 +1,9 @@
 package net.restapp.restcontroller;
 
+import io.swagger.annotations.*;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
+import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Position;
 import net.restapp.servise.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
