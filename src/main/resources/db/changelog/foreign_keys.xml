@@ -1,0 +1,75 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+    <changeSet id="1" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="employees" baseColumnNames="position_id"
+                                 constraintName="fk_employees_positions"
+                                 referencedTableName="position"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="NO ACTION"/>
+    </changeSet>
+    <changeSet id="2" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="employees" baseColumnNames="user_id"
+                                 constraintName="fk_employees_users"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet id="3" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="users" baseColumnNames="role_id"
+                                 constraintName="fk_users_role"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="NO ACTION"/>
+    </changeSet>
+    <changeSet id="4" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="workinghours" baseColumnNames="employees_id"
+                                 constraintName="fk_workinghours_employees_id"
+                                 referencedTableName="employees"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet id="5" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="workinghours" baseColumnNames="event_id"
+                                 constraintName="fk_workinghours_event_id"
+                                 referencedTableName="event"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet id="6" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="workinghours" baseColumnNames="status_id"
+                                 constraintName="fk_workinghours_status_id"
+                                 referencedTableName="status"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet id="7" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="position" baseColumnNames="department_id"
+                                 constraintName="fk_position_department"
+                                 referencedTableName="department"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="NO ACTION"/>
+    </changeSet>
+    <changeSet id="13" author="Anulich Svitlana">
+        <addForeignKeyConstraint baseTableName="archive_salary" baseColumnNames="employee_id"
+                                 constraintName="fk_archive_salary_employee_id"
+                                 referencedTableName="employees"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>
