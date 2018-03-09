@@ -61,15 +61,19 @@ public class EmployeesJsonSerializer extends JsonSerializer<Employees> {
         } else {
             jsonGenerator.writeNullField("position");
         }
-        if (employees.getArchiveSalary() != null) {
-            jsonGenerator.writeArrayFieldStart("archiveSalary");
-            for(ArchiveSalary archiveSalary: employees.getArchiveSalary()) {
-                jsonGenerator.writeNumberField("id", archiveSalary.getId());
-                jsonGenerator.writeNumberField("monthSalary", archiveSalary.getMonthSalary());
-                jsonGenerator.writeStringField("date", archiveSalary.getDate().toString());
-            }
-            jsonGenerator.writeEndArray();
-        }
+//        if (employees.getArchiveSalary() != null) {
+//            jsonGenerator.writeArrayFieldStart("archiveSalary");
+//            jsonGenerator.writeStartArray();
+//            for(ArchiveSalary archiveSalary: employees.getArchiveSalary()) {
+//                jsonGenerator.writeStartObject();
+//                jsonGenerator.writeNumberField("id", archiveSalary.getId());
+//                jsonGenerator.writeNumberField("monthSalary", archiveSalary.getMonthSalary());
+//                jsonGenerator.writeStringField("date", archiveSalary.getDate().toString());
+//                jsonGenerator.writeEndObject();
+//            }
+//            jsonGenerator.writeEndArray();
+//            jsonGenerator.writeEndObject();
+//        }
         jsonGenerator.writeEndObject();
     }
 }
