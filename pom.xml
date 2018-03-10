@@ -25,6 +25,9 @@
         <lombok.version>1.16.18</lombok.version>
         <swagger.version>2.6.1</swagger.version>
         <modelmapper.version>1.1.2</modelmapper.version>
+        <itextpdf.version>5.5.10</itextpdf.version>
+        <pdfbox.version>2.0.4</pdfbox.version>
+        <bcprov.version>1.56</bcprov.version>
     </properties>
     <dependencies>
         <!-- Spring -->
@@ -124,25 +127,26 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>1.4.3.RELEASE</version>
-        </dependency>
+        <!--<version>1.4.3.RELEASE</version>-->
+    </dependency>
 
-        <!-- Email end-->
+    <!-- Email end-->
+
         <!-- PDF start-->
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.5.10</version>
+            <version>${itextpdf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.4</version>
+            <version>${pdfbox.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.56</version>
+            <version>${bcprov.version}</version>
         </dependency>
 
         <!-- PDF end-->
