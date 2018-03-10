@@ -1,5 +1,6 @@
 package net.restapp.exception.handler;
 
+import net.restapp.exception.EntityConstraintException;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
 import org.springframework.http.HttpHeaders;
@@ -37,6 +38,15 @@ public class RestResponseEntityExceptionHandler {
      */
     @ExceptionHandler(value = {EntityNullException.class})
     protected ResponseEntity<ErrorBody> handleEntityNull(EntityNullException ex, HttpServletRequest request) {
+        ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * The method transforms an exception {@link net.restapp.exception.EntityConstraintException} to the mode of {@link ErrorBody}
+     */
+    @ExceptionHandler(value = {EntityConstraintException.class})
+    protected ResponseEntity<ErrorBody> handleEntityConstraint(EntityConstraintException ex, HttpServletRequest request) {
         ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

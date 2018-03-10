@@ -93,7 +93,7 @@ public class EmployeesServiceImpl implements EmployeesService {
         List<Employees> employeesList = new ArrayList<>();
         List<User> userList = userService.getAllByRoleId(id);
         for (User user: userList) {
-            employeesList.add(user.getEmployees());
+            if (user.getId() != 1) employeesList.add(user.getEmployees());
         }
         return employeesList;
     }
@@ -116,6 +116,11 @@ public class EmployeesServiceImpl implements EmployeesService {
     public boolean isEmployeeExist(Long id) {
         Employees employees = repoEmployees.getOne(id);
         return employees != null;
+    }
+
+    @Override
+    public Employees getWithPositionId(Long id) {
+        return repoEmployees.findAllWithPositionId(id);
     }
 
 

@@ -1,19 +1,19 @@
 package net.restapp.restcontroller;
 
 import io.swagger.annotations.*;
+import net.restapp.dto.PositionCreateDTO;
+import net.restapp.dto.PositionReadDTO;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
-import net.restapp.model.ArchiveSalary;
+import net.restapp.mapper.DtoMapper;
 import net.restapp.model.Position;
 import net.restapp.servise.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
@@ -21,13 +21,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/position")
 @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
-@Api(value="position", description="Operations pertaining to position in HRManagement")
+@Api(value="position", description="Operations pertaining to position")
 public class PositionController {
 
     @Autowired
     PositionService positionService;
 
-    @ApiOperation(value = "View position by id", response = ArchiveSalary.class)
+    @Autowired
+    DtoMapper mapper;
+
+//-------------------------------- get ----------------------------------------
+    @ApiOperation(value = "View position by id", response = PositionReadDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Event successfully retrieved"),
             @ApiResponse(code = 401, message = "You are not authorized to view event"),
@@ -37,7 +41,7 @@ public class PositionController {
     @RequestMapping(value = "/{positionId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getPosition(@ApiParam(value = "id of the Position", required = true) @PathVariable("positionId") Long positionId){
+    public PositionReadDTO getPosition(@ApiParam(value = "id of the Position", required = true) @PathVariable("positionId") Long positionId){
 
         if (positionId == null) {
             String msg = "PathVariable can't be null ";
@@ -49,9 +53,12 @@ public class PositionController {
             String msg = String.format("There is no position with id: %d", positionId);
             throw new EntityNotFoundException(msg);
         }
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return mapper.simpleFieldMap(position, PositionReadDTO.class);
     }
-    @ApiOperation(value = "Delete position by id", response = ArchiveSalary.class)
+
+
+//--------------------------delete ---------------------------------------
+    @ApiOperation(value = "Delete position by id", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Position successfully deleted"),
             @ApiResponse(code = 401, message = "You are not authorized to delete position"),
@@ -62,7 +69,7 @@ public class PositionController {
     @RequestMapping(value = "/{positionId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deletePosition(@ApiParam(value = "id of the Position", required = true) @PathVariable("positionId") Long positionId){
+    public ResponseEntity deletePosition(@ApiParam(value = "id of the Position", required = true) @PathVariable("positionId") Long positionId){
 
         if (positionId == null) {
             String msg = "PathVariable can't be null ";
@@ -79,7 +86,10 @@ public class PositionController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @ApiOperation(value = "Update position by id", response = ArchiveSalary.class)
+
+//-----------------------------------edit ----------------------------------------------
+//
+    @ApiOperation(value = "Update position by id", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Position successfully updated"),
             @ApiResponse(code = 401, message = "You are not authorized to update position"),
@@ -90,8 +100,8 @@ public class PositionController {
     @RequestMapping(value = "/{positionId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> editPosition(@ApiParam(value = "id of the Position", required = true)  @PathVariable("positionId") Long positionId,
-                                               @ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid Position position){
+    public ResponseEntity editPosition(@ApiParam(value = "id of the Position", required = true)  @PathVariable("positionId") Long positionId,
+                                               @ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid PositionCreateDTO dto){
 
         if (positionId == null) {
             String msg = "PathVariable can't be null ";
@@ -103,14 +113,18 @@ public class PositionController {
             String msg = String.format("There is no position with id: %d", positionId);
             throw new EntityNotFoundException(msg);
         }
-        if (position == null) {
+        if (dto == null) {
             throw new EntityNullException("position can't be null");
         }
+        Position position = mapper.map(dto, Position.class);
         position.setId(positionId);
         positionService.save(position);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-    @ApiOperation(value = "Retrieve all positions", response = ArchiveSalary.class, responseContainer="List")
+
+//-----------------------------------getAll -------------------------------------------------------
+
+    @ApiOperation(value = "Retrieve all positions", response = PositionReadDTO.class, responseContainer="List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Positions successfully retrieved"),
             @ApiResponse(code = 401, message = "You are not authorized to retrieve positions"),
@@ -120,16 +134,17 @@ public class PositionController {
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllPosition(){
+    public List<PositionReadDTO> getAllPosition(){
         List<Position> positions = positionService.getAll();
         if (positions.isEmpty()) {
             String msg = "There is no position in database ";
             throw new EntityNotFoundException(msg);
         }
-        return new ResponseEntity<>(positions,HttpStatus.OK);
+        return mapper.listSimpleFieldMap(positions,PositionReadDTO.class);
     }
 
-    @ApiOperation(value = "Save position to database", response = ArchiveSalary.class)
+//--------------------------------add --------------------------------------------
+    @ApiOperation(value = "Save position to database", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Position successfully created"),
             @ApiResponse(code = 401, message = "You are not authorized to create position"),
@@ -140,21 +155,16 @@ public class PositionController {
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> savePosition(@ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid Position position,
-                                                 UriComponentsBuilder builder){
-        HttpHeaders httpHeaders = new HttpHeaders();
-
-        if (position == null) {
-            throw new EntityNullException("event can't be null");
+    public ResponseEntity savePosition(
+            @ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid PositionCreateDTO dto){
+        if (dto == null) {
+            throw new EntityNullException("position can't be null");
         }
+        Position position = mapper.map(dto, Position.class);
         positionService.save(position);
 
-        httpHeaders.setLocation(builder.path("/position/getAll").buildAndExpand().toUri());
-        return new ResponseEntity<>(position,httpHeaders,HttpStatus.CREATED);
+       return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-
-
 
 
 }

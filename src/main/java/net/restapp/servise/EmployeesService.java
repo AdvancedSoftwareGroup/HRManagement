@@ -18,8 +18,9 @@ public interface EmployeesService {
 
     List<Employees> getAllByRoleId(Long id);
 
-
     void updateEmployeeRole(EmployeeChangeRoleDTO dto) throws AccessDeniedException;
 
     boolean isEmployeeExist(Long employeeId);
+
+    Employees getWithPositionId(Long id);
 }
