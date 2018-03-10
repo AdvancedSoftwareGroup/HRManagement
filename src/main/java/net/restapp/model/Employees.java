@@ -1,13 +1,9 @@
 package net.restapp.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import io.swagger.annotations.ApiModel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-//import net.restapp.json.EmployeesJsonSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,7 +15,6 @@ import java.util.List;
 
 @Getter
 @Setter
-//@JsonSerialize(using = EmployeesJsonSerializer.class)
 @EqualsAndHashCode(exclude = { "archiveSalary", "workingHoursList", "user", "position"})
 public class Employees {
 
