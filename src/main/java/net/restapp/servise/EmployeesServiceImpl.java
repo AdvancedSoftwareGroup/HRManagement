@@ -1,5 +1,6 @@
 package net.restapp.servise;
 
+import net.restapp.dto.EmployeeChangeRoleDTO;
 import net.restapp.exception.EntityAlreadyExistException;
 import net.restapp.model.Employees;
 import net.restapp.model.Position;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -81,6 +84,28 @@ public class EmployeesServiceImpl implements EmployeesService {
         return repoEmployees.findOne(id);
     }
 
+
+
+    @Override
+    public List<Employees> getAllByRoleId(Long id) {
+        List<Employees> employeesList = new ArrayList<>();
+        List<User> userList = userService.getAllByRoleId(id);
+        for (User user: userList) {
+            employeesList.add(user.getEmployees());
+        }
+        return employeesList;
+    }
+
+    /**
+     * The method change find employee and calls a userService
+     * to change role for user
+     */
+    @Override
+    @Transactional
+    public void updateEmployeeRole(EmployeeChangeRoleDTO dto) throws AccessDeniedException {
+        Employees employees = repoEmployees.findOne(dto.getEmployeeId());
+        userService.updateUserRole(employees.getUser(), dto.getRoleId());
+    }
 
 
 }

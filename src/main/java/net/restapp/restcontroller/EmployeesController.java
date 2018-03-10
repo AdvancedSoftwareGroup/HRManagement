@@ -121,7 +121,7 @@ public class EmployeesController {
         }
 
         if (employees == null) {
-            throw new EntityNullException("position can't be null");
+            throw new EntityNullException("employee can't be null");
         }
 
         employees.setId(employeeId);

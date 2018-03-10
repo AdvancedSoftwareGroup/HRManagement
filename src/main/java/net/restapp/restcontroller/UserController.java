@@ -1,57 +1,86 @@
 package net.restapp.restcontroller;
 
-import net.restapp.exception.EntityNullException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import net.restapp.dto.UserReadDTO;
+import net.restapp.dto.UserUpdateEmailDTO;
+import net.restapp.dto.UserUpdatePasswordDTO;
+import net.restapp.mapper.DtoMapper;
 import net.restapp.model.User;
 import net.restapp.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/employees/user")
 @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
+@Api(value = "user", description = "Operations pertaining with login user")
 public class UserController {
+
+    @Autowired
+    private DtoMapper mapper;
 
     @Autowired
     UserService userService;
 
+    @ApiOperation(value = "View a login user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Login user successfully showed"),
+            @ApiResponse(code = 401, message = "You are not authorized to update user"),
+            @ApiResponse(code = 403, message = "Accessing updating the user you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The user is not found"),
+            @ApiResponse(code = 400, message = "Wrong arguments")
+    })
     @RequestMapping(value = "",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> getUser(HttpServletRequest request) {
+    public UserReadDTO getUser(HttpServletRequest request) {
 
         Long userId = getLoginUserId(request);
         User user = userService.getById(userId);
 
-        if (user == null) {
-            String msg = String.format("There is no user with id: %d", userId);
-            throw new EntityNotFoundException(msg);
-        }
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return mapper.simpleFieldMap(user, UserReadDTO.class);
     }
 
-    @RequestMapping(value = "",
+    @ApiOperation(value = "Update password for login User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Password successfully updated"),
+            @ApiResponse(code = 401, message = "You are not authorized to update user"),
+            @ApiResponse(code = 403, message = "Accessing updating the user you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The user you were trying to reach is not found"),
+            @ApiResponse(code = 400, message = "Wrong arguments")
+    })
+    @RequestMapping(value = "/pass",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> setUser(@RequestBody @Valid User user,
+    public void setUser(@Valid @RequestBody UserUpdatePasswordDTO dto,
                                           HttpServletRequest request) {
-
         Long userId = getLoginUserId(request);
+        userService.updateUserPasswordById(userId,dto);
+    }
 
-        if (user == null) {
-            throw new EntityNullException("user can't be null");
-        }
-        user.setId(userId);
-        userService.save(user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+    @ApiOperation(value = "Update email for login User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Email successfully updated"),
+            @ApiResponse(code = 401, message = "You are not authorized to update user"),
+            @ApiResponse(code = 403, message = "Accessing updating the user you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The user you were trying to reach is not found"),
+            @ApiResponse(code = 400, message = "Wrong arguments")
+    })
+    @RequestMapping(value = "/email",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void setUser(@Valid @RequestBody UserUpdateEmailDTO dto,
+                        HttpServletRequest request) {
+        Long userId = getLoginUserId(request);
+        userService.updateUserEmailById(userId,dto);
     }
 
     private Long getLoginUserId(HttpServletRequest request){
@@ -59,6 +88,5 @@ public class UserController {
         User user = userService.findByEmail(userLoginEmail);
         return user.getId();
     }
-
 
 }
