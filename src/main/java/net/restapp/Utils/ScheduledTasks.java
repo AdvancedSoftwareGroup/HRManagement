@@ -35,7 +35,7 @@ public class ScheduledTasks {
             String mail = value.getEmployee().getUser().getEmail();
             String sendingMessage = value.getEmployee().getFirstName() + value.getEmployee().getLastName()
                                     + value.getDate() + value.getMonthSalary();
-            //Тут должна быть отправка по почте
+            //todo: Тут должна быть отправка по почте
 
             emailOb.sendEmail(sender,mail,sendingMessage);
         }

@@ -1,6 +1,8 @@
 package net.restapp.restcontroller;
 
 import io.swagger.annotations.*;
+import net.restapp.Utils.Email;
+import net.restapp.Utils.LettersExample;
 import net.restapp.dto.EmployeeCreateDTO;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
@@ -19,16 +21,20 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
-@Api(value="employee", description="Operations pertaining to employee in HRManagement")
+@Api(value="employee", description="Operations pertaining to employee")
 public class EmployeesController {
 
     @Autowired
@@ -168,15 +174,28 @@ public class EmployeesController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Employees> saveEmployee(
-            @ApiParam(value = "json body of Employee", required = true) @RequestBody @Valid EmployeeCreateDTO dto) {
+            @ApiParam(value = "json body of Employee", required = true) @RequestBody @Valid EmployeeCreateDTO dto,
+            HttpServletRequest request) {
 
         Employees employees = mapper.map(dto, Employees.class);
         User user = new User();
         user.setEmail(dto.getEmail());
         employees.setUser(user);
         employeesService.save(employees);
-                
+
+        sendWelcomeLetter(user.getEmail(),request);
+
         return new ResponseEntity<>(employees, HttpStatus.CREATED);
+    }
+
+    private void sendWelcomeLetter(String email,HttpServletRequest request) {
+        String domain=request.getRequestURL().toString();
+        String url = domain.substring(0,domain.indexOf("api")+3);
+
+        Email email1Send = new Email();
+        LettersExample lettersExample = new LettersExample();
+
+        email1Send.sendEmail(mailSender,email, lettersExample.createWelcomeMessage(url));
     }
 
     private boolean checkLoginUserHavePetitionForThisInfo(Long employeeId, HttpServletRequest request) {
