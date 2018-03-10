@@ -1,10 +1,11 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Employees;
 import net.restapp.model.Status;
 import net.restapp.repository.RepoArchiveSalary;
 import net.restapp.repository.RepoStatus;
+import net.restapp.servise.ArchiveSalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

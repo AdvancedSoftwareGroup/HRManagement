@@ -1,7 +1,8 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 import net.restapp.model.Status;
 import net.restapp.repository.RepoStatus;
+import net.restapp.servise.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

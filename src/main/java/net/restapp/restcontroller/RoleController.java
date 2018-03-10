@@ -2,6 +2,8 @@ package net.restapp.restcontroller;
 
 import io.swagger.annotations.*;
 import net.restapp.dto.EmployeeChangeRoleDTO;
+import net.restapp.dto.EmployeeReadDTO;
+import net.restapp.mapper.DtoMapper;
 import net.restapp.model.Employees;
 import net.restapp.servise.EmployeesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,12 @@ public class RoleController {
     @Autowired
     EmployeesService employeesService;
 
+    @Autowired
+    private DtoMapper mapper;
 
-    @ApiOperation(value = "View all employees by role ID", response = Employees.class, responseContainer = "List")
+//-------------------------------getAll with role ------------------------------------------------
+
+    @ApiOperation(value = "View all employees by role ID", response = EmployeeReadDTO.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Employee successfully got"),
             @ApiResponse(code = 401, message = "You are not authorized to get employees"),
@@ -36,15 +42,17 @@ public class RoleController {
     @RequestMapping(value = "/{roleId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Employees>> getAllEmployees(@PathVariable("roleId") Long roleId) {
+    public List<EmployeeReadDTO> getAllEmployees(@PathVariable("roleId") Long roleId) {
 
         List<Employees> employees = employeesService.getAllByRoleId(roleId);
         if (employees.isEmpty()) {
             throw new EntityNotFoundException();
         }
-        return new ResponseEntity<>(employees, HttpStatus.OK);
+        return mapper.listSimpleFieldMap(employees, EmployeeReadDTO.class);
+
     }
 
+//--------------------------------change role --------------------------------------------------------------
     @ApiOperation(value = "View all employees by role ID", response = Employees.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Employee successfully got"),

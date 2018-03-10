@@ -1,4 +1,4 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 
 import net.restapp.dto.UserUpdateEmailDTO;
@@ -8,6 +8,7 @@ import net.restapp.model.Role;
 import net.restapp.model.User;
 import net.restapp.repository.RepoRole;
 import net.restapp.repository.RepoUser;
+import net.restapp.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

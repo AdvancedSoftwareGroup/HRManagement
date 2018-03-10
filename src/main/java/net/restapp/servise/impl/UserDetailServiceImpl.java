@@ -1,4 +1,4 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 import lombok.NonNull;
 import net.restapp.model.User;

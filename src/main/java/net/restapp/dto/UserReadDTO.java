@@ -26,7 +26,4 @@ public class UserReadDTO {
     @ApiModelProperty(position = 3)
     private Role role;
 
-    //@ApiModelProperty(dataType = "com.goit.employees.swagger.dummy.employee.EmployeeDummy", position = 4)
-    @ApiModelProperty(position = 4)
-    private Employees employee;
 }
