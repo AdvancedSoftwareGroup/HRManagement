@@ -1,19 +1,20 @@
 package net.restapp.restcontroller;
 
 import io.swagger.annotations.*;
+import net.restapp.dto.DepartmentCreateDTO;
+import net.restapp.dto.DepartmentReadDTO;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
+import net.restapp.mapper.DtoMapper;
 import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Department;
 import net.restapp.servise.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
@@ -21,23 +22,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/department")
 @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
-@Api(value="department", description="Operations pertaining to department in HRManagement")
+@Api(value="department", description="Operations pertaining to department")
 public class DepartmentController {
 
     @Autowired
     DepartmentService departmentService;
 
-    @ApiOperation(value = "View departament by ID", response = ArchiveSalary.class)
+    @Autowired
+    DtoMapper mapper;
+
+//-------------------------------get ---------------------------------
+
+    @ApiOperation(value = "View department by ID", response = DepartmentReadDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved department"),
             @ApiResponse(code = 401, message = "You are not authorized to view the department by id"),
             @ApiResponse(code = 403, message = "Accessing the department by id you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The department you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The department you were trying to reach is not found"),
+            @ApiResponse(code = 400, message = "Wrong arguments")
     })
     @RequestMapping(value = "/{departmentId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getDepartment(@ApiParam(value = "id of Departament", required = true) @PathVariable Long departmentId){
+    public DepartmentReadDTO getDepartment(@ApiParam(value = "id of Departament", required = true) @PathVariable Long departmentId){
 
         if (departmentId == null){
             String msg = "PathVariable can't be null ";
@@ -49,10 +56,11 @@ public class DepartmentController {
             String msg = String.format("There is no departments with id: %d", departmentId);
             throw new EntityNotFoundException(msg);
         }
-        return new ResponseEntity<>(department, HttpStatus.OK);
-    }
+        return mapper.simpleFieldMap(department,DepartmentReadDTO.class);
 
-    @ApiOperation(value = "Delete department by ID", response = ArchiveSalary.class)
+    }
+//------------------------delete ---------------------------------
+    @ApiOperation(value = "Delete department by ID", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Department successfully deleted"),
             @ApiResponse(code = 401, message = "You are not authorized to delete department"),
@@ -62,7 +70,7 @@ public class DepartmentController {
     @RequestMapping(value = "/{departmentId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deleteDepartment(@ApiParam(value = "id of Departament", required = true) @PathVariable Long departmentId){
+    public ResponseEntity deleteDepartment(@ApiParam(value = "id of Department", required = true) @PathVariable Long departmentId){
 
         if (departmentId == null){
             String msg = "PathVariable can't be null ";
@@ -77,54 +85,63 @@ public class DepartmentController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+//---------------------------edit --------------------------------
+
     @ApiOperation(value = "Update department by ID", response = ArchiveSalary.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Department successfully updated"),
             @ApiResponse(code = 401, message = "You are not authorized to update department"),
             @ApiResponse(code = 403, message = "Accessing updating the department you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The department you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The department you were trying to reach is not found"),
+            @ApiResponse(code = 400, message = "Wrong arguments")
     })
     @RequestMapping(value = "/{departmentId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> editDepartment(@ApiParam(value = "id of Departament", required = true) @PathVariable Long departmentId,
-                                                 @ApiParam(value = "json body of Departament", required = true) @RequestBody @Valid Department department){
+    public ResponseEntity<Object> editDepartment(@ApiParam(value = "id of Department", required = true) @PathVariable Long departmentId,
+                                                 @ApiParam(value = "json body of Department", required = true) @RequestBody @Valid DepartmentCreateDTO dto){
 
         if (departmentId == null){
             String msg = "PathVariable can't be null";
             throw new PathVariableNullException(msg);
         }
 
-        Department department2 = departmentService.getById(departmentId);
+        Department department = departmentService.getById(departmentId);
 
-        if (department2 == null) {
+        if (department == null) {
             throw new EntityNotFoundException();
         }
-        department.setId(departmentId);
-        departmentService.save(department);
+        Department department2 = mapper.map(dto,Department.class);
+        department2.setId(departmentId);
+        departmentService.save(department2);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @ApiOperation(value = "View a list of departments", response = ArchiveSalary.class, responseContainer="List")
+
+//---------------------------getAll --------------------------------
+    @ApiOperation(value = "View a list of departments", response = DepartmentReadDTO.class, responseContainer="List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list of existing departments"),
             @ApiResponse(code = 401, message = "You are not authorized to view list of existing departments"),
             @ApiResponse(code = 403, message = "Accessing to view list of existing departments you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The departments entries not found"),
-            @ApiResponse(code = 400, message = "request is not correct")
+            @ApiResponse(code = 400, message = "Wrong arguments")
     })
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllDepartment(){
+    public List<DepartmentReadDTO> getAllDepartment(){
 
         List<Department> departments = departmentService.getAll();
         if (departments.isEmpty()) {
             throw new EntityNotFoundException();
         }
-        return new ResponseEntity<>(departments,HttpStatus.OK);
-    }
+        return  mapper.listSimpleFieldMap(departments,DepartmentReadDTO.class);
 
-    @ApiOperation(value = "add departament to database", response = ArchiveSalary.class)
+    }
+//--------------------------add ---------------------------------------
+
+    @ApiOperation(value = "add departament to database", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully create entry of salary"),
             @ApiResponse(code = 401, message = "You are not authorized to view the salary for period"),
@@ -134,17 +151,16 @@ public class DepartmentController {
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> saveDepartment(@ApiParam(value = "json body of Departament", required = true) @RequestBody @Valid Department department,
-                                                 UriComponentsBuilder builder){
-        HttpHeaders httpHeaders = new HttpHeaders();
+    public ResponseEntity saveDepartment(
+            @ApiParam(value = "json body of Department", required = true) @RequestBody @Valid DepartmentCreateDTO dto){
 
-        if (department == null) {
+        if (dto == null) {
             throw new EntityNullException("department can't be null");
         }
+        Department department = mapper.map(dto,Department.class);
         departmentService.save(department);
 
-        httpHeaders.setLocation(builder.path("/department/getAll").buildAndExpand().toUri());
-        return new ResponseEntity<>(department,httpHeaders,HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 

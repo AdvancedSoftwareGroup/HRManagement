@@ -23,16 +23,16 @@ import java.math.BigDecimal;
 
 public class PositionCreateDTO {
 
-    @ApiModelProperty(position = 2)
+    @ApiModelProperty(position = 1)
     @NotNull(message = "name must be not null")
     private String name;
 
-    @ApiModelProperty(position = 3)
+    @ApiModelProperty(position = 2)
     @NotNull(message = "dayForVacation must be not null")
     @Min(value = 0, message = "days for vacation must be 0 and greater")
     private int dayForVacation;
 
-    @ApiModelProperty(position = 4)
+    @ApiModelProperty(position = 3)
     @NotNull(message = "salary per hour must be not null")
     @Min(value = 0, message = "hourly rest must be 0 and greater")
     @DecimalMin(value = "0.00")
@@ -40,7 +40,7 @@ public class PositionCreateDTO {
     private BigDecimal salary;
 
     @Entity(Department.class)
-    @ApiModelProperty(position = 5)
+    @ApiModelProperty(position = 4)
     @NotNull(message = "department must be not null")
     private Long departmentId;
 
