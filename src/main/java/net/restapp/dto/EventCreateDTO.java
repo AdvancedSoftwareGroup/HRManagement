@@ -1,0 +1,33 @@
+package net.restapp.dto;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import net.restapp.Validator.RegexpPatterns;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
+
+/**
+ * The {@link EventCreateDTO} to create a {@link net.restapp.model.Event} entity by Rest Controller.
+ */
+@Getter
+@Setter
+@ApiModel
+public class EventCreateDTO {
+
+    @ApiModelProperty(position = 1)
+    @NotNull(message = "This field must be NOT NULL")
+    @Pattern(regexp= RegexpPatterns.patternStringWithNumbersLettersAndDash,
+            message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
+    private String name;
+
+    @ApiModelProperty(position = 2)
+    @NotNull(message = "This field must be NOT NULL")
+    @Min(value = 0, message = "slary coefficient must be 0 and greater")
+    private BigDecimal salary_coef;
+
+}
