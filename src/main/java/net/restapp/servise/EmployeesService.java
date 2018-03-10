@@ -20,4 +20,6 @@ public interface EmployeesService {
 
 
     void updateEmployeeRole(EmployeeChangeRoleDTO dto) throws AccessDeniedException;
+
+    boolean isEmployeeExist(Long employeeId);
 }

@@ -1,7 +1,8 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 import net.restapp.model.Department;
 import net.restapp.repository.RepoDepartment;
+import net.restapp.servise.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

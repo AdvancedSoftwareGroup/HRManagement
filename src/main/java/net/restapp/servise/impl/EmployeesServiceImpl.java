@@ -1,4 +1,4 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 import net.restapp.dto.EmployeeChangeRoleDTO;
 import net.restapp.exception.EntityAlreadyExistException;
@@ -8,6 +8,8 @@ import net.restapp.model.User;
 import net.restapp.repository.RepoEmployees;
 import net.restapp.repository.RepoPosition;
 import net.restapp.repository.RepoUser;
+import net.restapp.servise.EmployeesService;
+import net.restapp.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,25 +37,22 @@ public class EmployeesServiceImpl implements EmployeesService {
 
     @Override
     @Transactional
-    public void save (Employees employees){
+    public void save(Employees employees) {
         Long positionId = employees.getPosition().getId();
         Position position = repoPosition.findOne(positionId);
-        if (position == null){
+        if (position == null) {
             throw new EntityNotFoundException(
-                    "position with id="+positionId+" don't exist at database. " +
+                    "position with id=" + positionId + " don't exist at database. " +
                             "Please, create it or select another one.");
         }
 
 
-        if (employees.getId() == 0){
+        if (employees.getId() == 0) {
             //vacation day for first half a year equals 0;
             employees.setAvailableVacationDay(0);
-            //when employee add to the system password=11111. Then employee change pass by himself
-            User user = employees.getUser();
-            user.setPassword("11111");
             Employees databaseEmployee = repoEmployees.findAllWithPositionId(positionId);
             if (databaseEmployee != null) {
-                if (databaseEmployee.getPosition().getId() != employees.getPosition().getId()) {
+                if (databaseEmployee.getPosition().getId() == employees.getPosition().getId()) {
                     throw new EntityAlreadyExistException(
                             "Employee for position with positionid=" + positionId + " already exist.");
                 }
@@ -61,8 +60,7 @@ public class EmployeesServiceImpl implements EmployeesService {
             userService.save(employees.getUser());
         }
 
-        User user = userService.findByEmail(employees.getUser().getEmail());
-        employees.setUser(user);
+        employees.setUser(getUserByEmployeeId(employees.getId()));
         repoEmployees.save(employees);
     }
 
@@ -70,6 +68,10 @@ public class EmployeesServiceImpl implements EmployeesService {
     @Transactional
     public void delete(Long id) {
         Employees employees = getById(id);
+        if (employees == null) {
+            String msg = String.format("There is no employee with id: %d", id);
+            throw new EntityNotFoundException(msg);
+        }
         repoEmployees.delete(id);
         repoUser.delete(employees.getUser().getId());
     }
@@ -107,5 +109,18 @@ public class EmployeesServiceImpl implements EmployeesService {
         userService.updateUserRole(employees.getUser(), dto.getRoleId());
     }
 
+    /**
+     * check is employee with id exist at database
+     */
+    @Override
+    public boolean isEmployeeExist(Long id) {
+        Employees employees = repoEmployees.getOne(id);
+        return employees != null;
+    }
 
+
+    public User getUserByEmployeeId(Long id) {
+        Employees employees = repoEmployees.getOne(id);
+        return repoUser.getOne(employees.getUser().getId());
+    }
 }

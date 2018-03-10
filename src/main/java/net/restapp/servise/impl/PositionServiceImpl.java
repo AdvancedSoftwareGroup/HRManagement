@@ -1,9 +1,10 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 import net.restapp.model.Department;
 import net.restapp.model.Position;
 import net.restapp.repository.RepoDepartment;
 import net.restapp.repository.RepoPosition;
+import net.restapp.servise.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
-public class PositionServiceImpl implements PositionService{
+public class PositionServiceImpl implements PositionService {
 
     @Autowired
     RepoPosition repoPosition;

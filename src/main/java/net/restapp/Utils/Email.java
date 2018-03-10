@@ -5,7 +5,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
+import java.io.*;
 
 /*
     В контролле который использует это методы создайте
@@ -61,8 +61,9 @@ public class Email {
 
         sender.send(message);
 
-
     }
+
+
 
 }
 

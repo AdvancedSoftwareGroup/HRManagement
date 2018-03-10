@@ -30,6 +30,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+//------------------------------ get -----------------------------------
     @ApiOperation(value = "View a login user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Login user successfully showed"),
@@ -48,8 +49,9 @@ public class UserController {
 
         return mapper.simpleFieldMap(user, UserReadDTO.class);
     }
-
+//--------------------------------change password--------------------------------------------------
     @ApiOperation(value = "Update password for login User")
+
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Password successfully updated"),
             @ApiResponse(code = 401, message = "You are not authorized to update user"),
@@ -65,6 +67,8 @@ public class UserController {
         Long userId = getLoginUserId(request);
         userService.updateUserPasswordById(userId,dto);
     }
+
+//--------------------------------change email--------------------------------------------------
 
     @ApiOperation(value = "Update email for login User")
     @ApiResponses(value = {
@@ -83,6 +87,7 @@ public class UserController {
         userService.updateUserEmailById(userId,dto);
     }
 
+//-----------------------------------------------------------------------
     private Long getLoginUserId(HttpServletRequest request){
         String userLoginEmail=request.getUserPrincipal().getName();
         User user = userService.findByEmail(userLoginEmail);

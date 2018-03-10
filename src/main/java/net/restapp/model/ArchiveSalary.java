@@ -15,7 +15,6 @@ import java.util.Date;
 @Table(name = "archive_salary")
 @Getter
 @Setter
-@ApiModel
 @EqualsAndHashCode(exclude = "employee")
 public class ArchiveSalary {
 

@@ -1,8 +1,9 @@
-package net.restapp.servise;
+package net.restapp.servise.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import net.restapp.model.Role;
 import net.restapp.repository.RepoRole;
+import net.restapp.servise.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
