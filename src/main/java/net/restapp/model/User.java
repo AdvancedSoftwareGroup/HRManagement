@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @JsonSerialize(using = UserJsonSerializer.class)
 @EqualsAndHashCode
+
 public class User {
 
     @Id

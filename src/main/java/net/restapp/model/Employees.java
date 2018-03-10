@@ -3,6 +3,7 @@ package net.restapp.model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import io.swagger.annotations.ApiModel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,15 +31,19 @@ public class Employees {
     @Column(name = "first_name")
     private String firstName;
 
+    @NotNull
     @Column(name = "last_name")
     private String lastName;
 
+    @NotNull
     @Column(name ="availableVacationDay")
     private int availableVacationDay;// available day for Vacation
 
+    @NotNull
     @Column(name = "experience")
     private int experience;
 
+    @NotNull
     @Column(name = "startWorkingDate")
     private Date startWorkingDate;
 

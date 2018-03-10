@@ -48,12 +48,9 @@ public class EmployeesServiceImpl implements EmployeesService {
         if (employees.getId() == 0){
             //vacation day for first half a year equals 0;
             employees.setAvailableVacationDay(0);
-            //when employee add to the system password=11111. Then employee change pass by himself
-            User user = employees.getUser();
-            user.setPassword("11111");
             Employees databaseEmployee = repoEmployees.findAllWithPositionId(positionId);
             if (databaseEmployee != null) {
-                if (databaseEmployee.getPosition().getId() != employees.getPosition().getId()) {
+                if (databaseEmployee.getPosition().getId() == employees.getPosition().getId()) {
                     throw new EntityAlreadyExistException(
                             "Employee for position with positionid=" + positionId + " already exist.");
                 }
@@ -70,6 +67,10 @@ public class EmployeesServiceImpl implements EmployeesService {
     @Transactional
     public void delete(Long id) {
         Employees employees = getById(id);
+        if (employees == null) {
+            String msg = String.format("There is no employee with id: %d", id);
+            throw new EntityNotFoundException(msg);
+        }
         repoEmployees.delete(id);
         repoUser.delete(employees.getUser().getId());
     }

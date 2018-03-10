@@ -37,9 +37,10 @@ public class UserServiceImpl implements UserService {
                 throw new EntityAlreadyExistException(
                         "There is an account with that email address:" + user.getEmail() +" exist at database");
             }
+            //when employee add to the system password=11111. Then employee change pass by himself
+            user.setPassword("11111111");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setPassword(user.getPassword());
         if (user.getRole() == null){
             user.setRole(repoRole.getOne(2L));
         }
