@@ -5,5 +5,5 @@ import net.restapp.model.WorkingHours;
 import java.math.BigDecimal;
 
 public interface CountService {
-    BigDecimal calculateSalaryOfEvent(WorkingHours workingHours);
+    BigDecimal calculatePaymentOfEvent(WorkingHours workingHours);
 }

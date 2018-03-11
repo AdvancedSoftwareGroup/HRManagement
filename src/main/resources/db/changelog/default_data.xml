@@ -21,28 +21,27 @@
     </changeSet>
 
     <!--insert data to the table status-->
-    <changeSet id="2" author="Anulich Svitlana" >
+    <changeSet id="5" author="Anulich Svitlana" >
         <insert tableName="status">
             <column name="name" value="WORK"/>
             <column name="salary_coef" value="1"/>
         </insert>
         <insert tableName="status">
-            <column name="name" value="VOCATION"/>
-            <column name="salary_coef" value="null"/>
+            <column name="name" value="VACATION"/>
+            <column name="salary_coef" value="1"/>
         </insert>
         <insert tableName="status">
             <column name="name" value="HOSPITAL"/>
-            <column name="salary_coef" value="null"/>
+            <column name="salary_coef" value="0.8"/>
         </insert>
         <insert tableName="status">
             <column name="name" value="REMOTE_WORK"/>
-            <column name="salary_coef" value="null"/>
+            <column name="salary_coef" value="1"/>
         </insert>
         <insert tableName="status">
             <column name="name" value="APSENT"/>
             <column name="salary_coef" value="0"/>
         </insert>
-
     </changeSet>
 
 

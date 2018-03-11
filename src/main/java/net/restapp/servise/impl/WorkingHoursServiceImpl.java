@@ -9,6 +9,7 @@ import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,9 +27,10 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     @Autowired
     CountService countService;
 
+    @Transactional
     @Override
     public void save(WorkingHours workingHours) {
-        BigDecimal salary = countService.calculateSalaryOfEvent(workingHours);
+        BigDecimal salary = countService.calculatePaymentOfEvent(workingHours);
         workingHours.setSalary(salary);
         repoWorkingHours.save(workingHours);
     }

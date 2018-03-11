@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.restapp.mapper.Entity;
 import net.restapp.model.Position;
 import org.hibernate.validator.constraints.Email;
+import org.springframework.data.rest.core.annotation.Description;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -34,9 +35,10 @@ public class EmployeeCreateDTO {
     private String email;
 
     @ApiModelProperty(required = true, position = 4)
+    //("Experience it's count of month")
     @Min(value = 0, message = "experience must be 0 and greater")
     @NotNull(message = "experience must be not null")
-    private Double experience;
+    private int experience;
 
     @ApiModelProperty(required = true, position = 5)
     @NotNull(message = "startWorkingDate must be not null")

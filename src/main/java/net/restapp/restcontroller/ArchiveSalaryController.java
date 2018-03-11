@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -80,21 +82,59 @@ public class ArchiveSalaryController {
 
         return new ResponseEntity<>(archiveSalary, HttpStatus.OK);
     }
-    @ApiOperation(value = "add entry of salary to archive", response = ArchiveSalary.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully create entry of salary"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the salary for period"),
-            @ApiResponse(code = 403, message = "Accessing the salary for period you were trying to reach is forbidden"),
-            @ApiResponse(code = 400, message = "request is not correct")
-    })
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ArchiveSalary> saveDepartment(@RequestBody @Valid ArchiveSalary archiveSalary) {
-        if (archiveSalary == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        repoArchiveSalary.save(archiveSalary);
-        return new ResponseEntity<>(archiveSalary, HttpStatus.CREATED);
-    }
+//    }
+//    @ApiOperation(value = "add entry of salary to archive", response = ArchiveSalary.class)
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 201, message = "Successfully create entry of salary"),
+//            @ApiResponse(code = 401, message = "You are not authorized to view the salary for period"),
+//            @ApiResponse(code = 403, message = "Accessing the salary for period you were trying to reach is forbidden"),
+//            @ApiResponse(code = 400, message = "request is not correct")
+//    })
+//    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseEntity<ArchiveSalary> saveDepartment() {
+////        if (archiveSalary == null) {
+////            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+////        }
+//
+//        //Calendar cal = Calendar.getInstance();
+//        for (int i = 0; i < 10; i++) {
+//            //cal.add(Calendar.MONTH, -i);
+//            ArchiveSalary archiveSalary1 = new ArchiveSalary();
+//            Date date = new Date(2017, 3+i, 1);
+//            Employees employees = repoEmployees.findOne(3l);
+//            archiveSalary1.setDate(date);
+//            archiveSalary1.setMonthSalary(new BigDecimal(700+i*10));
+//            archiveSalary1.setEmployee(employees);
+//            repoArchiveSalary.save(archiveSalary1);
+//        }
+//
+//
+//
+////        Date today = cal.getTime();
+////
+////
+////        cal.add(Calendar.MONTH, -countMonth);
+////        Date before = cal.getTime();
+////
+////
+////
+////
+////                ArchiveSalary archiveSalary1 = new ArchiveSalary();
+////
+////                Date date = new Date(1900, 3, 1);
+////
+////                Employees employees = repoEmployees.findOne(2l);
+////                archiveSalary1.setDate(date);
+////                archiveSalary1.setMonthSalary(new BigDecimal(70000));
+////                archiveSalary1.setEmployee(employees);
+////                repoArchiveSalary.save(archiveSalary1);
+////
+////
+//
+//
+//        //repoArchiveSalary.save(archiveSalary1);
+//        return new ResponseEntity<>( HttpStatus.CREATED);
+//    }
 
     @ApiOperation(value = "View list of all salary entries from archive", response = ArchiveSalary.class, responseContainer="List")
     @ApiResponses(value = {

@@ -4,13 +4,11 @@ import io.swagger.annotations.*;
 import net.restapp.dto.EmployeeReadDTO;
 import net.restapp.dto.WorkingHoursCreateDTO;
 import net.restapp.dto.WorkingHoursReadDTO;
-import net.restapp.dto.WorkingHoursUpdateDTO;
 import net.restapp.exception.EntityConstraintException;
 import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
 import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
-import net.restapp.servise.CountService;
 import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -162,14 +160,27 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The workingHours you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "Wrong arguments")
     })
-    @RequestMapping(value = "/",
+    @RequestMapping(value = "/{workingHoursId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity editWorkingHours(
-            @ApiParam(value = "json body of WorkingHours", required = true) @RequestBody @Valid WorkingHoursUpdateDTO dto) {
+            @ApiParam(value = "id of workingHour", required = true) @PathVariable Long workingHoursId,
+            @ApiParam(value = "json body of WorkingHours", required = true) @RequestBody @Valid WorkingHoursCreateDTO dto) {
 
-        WorkingHours workingHours = mapper.map(dto,WorkingHours.class);
-        workingHoursService.save(workingHours);
+
+        if (workingHoursId == null) {
+            String msg = "working Hours Id must not be null ";
+            throw new PathVariableNullException(msg);
+        }
+        WorkingHours workingHours = workingHoursService.getById(workingHoursId);
+
+        if (workingHours == null) {
+            String msg = "workingHours not found";
+            throw new EntityNotFoundException(msg);
+        }
+        WorkingHours workingHours2 = mapper.map(dto,WorkingHours.class);
+        workingHours2.setId(workingHoursId);
+        workingHoursService.save(workingHours2);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -217,7 +228,7 @@ public class WorkingHoursController {
     }
 
 ////----------------------------------getAll for employee---------------------------------------------------
-    @ApiOperation(value = "get all working hours for employee", response = Employees.class, responseContainer="List")
+    @ApiOperation(value = "get all working hours for employee", response = WorkingHoursReadDTO.class, responseContainer="List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved of employee"),
             @ApiResponse(code = 401, message = "You are not authorized to view the information about employee"),
@@ -228,15 +239,14 @@ public class WorkingHoursController {
     @RequestMapping(value = "/getAll/{employeeId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllWorkingHoursForEmployee(
+    public List<WorkingHoursReadDTO> getAllWorkingHoursForEmployee(
             @ApiParam(value = "id of workingHour", required = true) @PathVariable Long employeeId ) {
 
         List<WorkingHours> workingHours = workingHoursService.getAllWithEmployeeId(employeeId);
         if (workingHours.isEmpty()) {
             throw new EntityNotFoundException();
         }
-        return new ResponseEntity<>(workingHours, HttpStatus.OK);
+        return mapper.listSimpleFieldMap(workingHours,WorkingHoursReadDTO.class);
     }
-
 
 }

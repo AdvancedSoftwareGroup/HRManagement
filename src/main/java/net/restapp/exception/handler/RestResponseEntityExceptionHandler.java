@@ -2,6 +2,7 @@ package net.restapp.exception.handler;
 
 import net.restapp.exception.EntityConstraintException;
 import net.restapp.exception.EntityNullException;
+import net.restapp.exception.NotEnoughHoursException;
 import net.restapp.exception.PathVariableNullException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,14 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * The method transforms an exception {@link net.restapp.exception.EntityConstraintException} to the mode of {@link ErrorBody}
+     */
+    @ExceptionHandler(value = {NotEnoughHoursException.class})
+    protected ResponseEntity<ErrorBody> NotEnoughHours(NotEnoughHoursException ex, HttpServletRequest request) {
+        ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
 
 
     private ErrorBody getErrorBody(Exception ex, HttpServletRequest request, HttpStatus STATUS) {

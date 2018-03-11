@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.restapp.Validator.RegexpPatterns;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -27,6 +28,7 @@ public class StatusCreateDTO {
 
     @ApiModelProperty(position = 2)
     @NotNull(message = "This field must be NOT NULL")
-    @Min(value = 0, message = "slary coefficient must be 0 and greater")
+    @Min(value = 0, message = "salary coefficient must be 0 and greater")
+    @Max(value = 2, message = "salary coefficient must be less than 2")
     private BigDecimal salary_coef;
 }

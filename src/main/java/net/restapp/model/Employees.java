@@ -36,6 +36,7 @@ public class Employees {
 
     @NotNull
     @Column(name = "experience")
+    //("Experience it's count of month")
     private int experience;
 
     @NotNull
