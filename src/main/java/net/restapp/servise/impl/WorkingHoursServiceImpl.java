@@ -3,11 +3,13 @@ package net.restapp.servise.impl;
 import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
 import net.restapp.repository.RepoWorkingHours;
+import net.restapp.servise.CountService;
 import net.restapp.servise.EmployeesService;
 import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,8 +23,13 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     @Autowired
     EmployeesService employeesService;
 
+    @Autowired
+    CountService countService;
+
     @Override
     public void save(WorkingHours workingHours) {
+        BigDecimal salary = countService.calculateSalaryOfEvent(workingHours);
+        workingHours.setSalary(salary);
         repoWorkingHours.save(workingHours);
     }
 

@@ -37,8 +37,6 @@ public class WorkingHoursController {
     @Autowired
     DtoMapper mapper;
 
-    @Autowired
-    CountService countService;
 
 ////----------------------------get List<Employees> that available for this data-----------------------------
     @ApiOperation(value = "get List of free employees for this date", response = EmployeeReadDTO.class, responseContainer="List")
@@ -213,10 +211,6 @@ public class WorkingHoursController {
             @ApiParam(value = "json body of WorkingHours", required = true) @RequestBody @Valid WorkingHoursCreateDTO dto) {
 
         WorkingHours workingHours = mapper.map(dto,WorkingHours.class);
-
-//todo: thinking about add a working hour (не учитываеться переработка и много чего другого. Надо продумать)
-
-        workingHours.setSalary(countService.calculateSalaryOfEvent(workingHours));
         workingHoursService.save(workingHours);
 
         return new ResponseEntity<>(HttpStatus.CREATED);

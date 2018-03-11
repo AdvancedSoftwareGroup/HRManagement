@@ -10,6 +10,10 @@ import java.math.BigDecimal;
 public class CountServiceImp implements CountService {
 
     public BigDecimal calculateSalaryOfEvent(WorkingHours workingHours){
+
+        //todo: if we send employee to vocation(avaliable vacation days, vacation salary)
+        //todo: sick
+
         BigDecimal salaryPerHour = workingHours.getEmployees().getPosition().getSalary();
         BigDecimal statusCoef = workingHours.getStatus().getSalary_coef();
         BigDecimal hours = workingHours.getHours();
