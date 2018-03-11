@@ -67,7 +67,7 @@ public class EmployeesController {
             throw new PathVariableNullException(msg);
         }
         if (request.isUserInRole("ROLE_USER")) {
-            if (!checkLoginUserHavePetitionForThisInfo(employeeId, request)) {
+            if (userService.checkLoginUserHavePetitionForThisInfo(employeeId, request)) {
                 throw new AccessDeniedException("You don't have permit to get iformation about employee with id=" + employeeId);
             }
         }
@@ -197,9 +197,5 @@ public class EmployeesController {
         email1Send.sendEmail(mailSender,email, lettersExample.createWelcomeMessage(url));
     }
 
-    private boolean checkLoginUserHavePetitionForThisInfo(Long employeeId, HttpServletRequest request) {
-        String email=request.getUserPrincipal().getName();
-        User user = userService.findByEmail(email);
-        return user.getId() == employeeId;
-    }
+
 }

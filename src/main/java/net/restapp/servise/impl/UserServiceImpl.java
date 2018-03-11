@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
@@ -133,7 +134,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Check if email already exist at the database
-     * @param email
      * @return true if email exist and false if not
      */
     private boolean emailExist(String email){
@@ -141,4 +141,12 @@ public class UserServiceImpl implements UserService {
         return  (user != null);
     }
 
+    /**
+     * Return true if login user corresponds to employeeId
+     */
+    public boolean checkLoginUserHavePetitionForThisInfo(Long employeeId, HttpServletRequest request) {
+        String email=request.getUserPrincipal().getName();
+        User user = findByEmail(email);
+        return user.getId() != employeeId;
+    }
 }

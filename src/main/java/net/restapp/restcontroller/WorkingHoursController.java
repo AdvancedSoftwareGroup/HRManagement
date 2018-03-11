@@ -9,16 +9,19 @@ import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
 import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
+import net.restapp.servise.UserService;
 import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +38,8 @@ public class WorkingHoursController {
     @Autowired
     DtoMapper mapper;
 
+    @Autowired
+    UserService userService;
 
 ////----------------------------get List<Employees> that available for this data-----------------------------
     @ApiOperation(value = "get List of free employees for this date", response = EmployeeReadDTO.class, responseContainer="List")
@@ -45,6 +50,7 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The list of employees you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "request is not correct")
     })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/getAvailableByDate/{date}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<EmployeeReadDTO> getAvailableEmployees(
@@ -71,16 +77,22 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The employee you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "request is not correct")
     })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
     @RequestMapping(value = "/getAvailableVacationDay/{workingHoursId}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> getAvailableVacationDay(
-            @ApiParam(value = "id of employee to get vacantion day cout", required = true) @PathVariable("workingHoursId") Long employeesId) {
+            @ApiParam(value = "id of employee to get vacantion day cout", required = true) @PathVariable("workingHoursId") Long employeesId,
+            HttpServletRequest request) {
 
         if (employeesId == null) {
             String msg = "working Hours Id must be not null ";
             throw new PathVariableNullException(msg);
         }
-
+        if (request.isUserInRole("ROLE_USER")) {
+            if (userService.checkLoginUserHavePetitionForThisInfo(employeesId, request)) {
+                throw new AccessDeniedException("You don't have permit to get iformation about employee with id=" + employeesId);
+            }
+        }
         Integer availableVacationDay = workingHoursService.getAvailableVacationDay(employeesId);
 
         return new ResponseEntity<>(availableVacationDay, HttpStatus.OK);
@@ -96,6 +108,7 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The employee you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "request is not correct")
     })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/{workingHoursId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -125,6 +138,7 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The WorkingHours you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "wrong arguments")
     })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/{workingHoursId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -160,6 +174,7 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The workingHours you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "Wrong arguments")
     })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/{workingHoursId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -194,6 +209,7 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The employee you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "request is not correct")
     })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -236,11 +252,24 @@ public class WorkingHoursController {
             @ApiResponse(code = 404, message = "The employee you were trying to reach is not found"),
             @ApiResponse(code = 400, message = "request is not correct")
     })
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER"})
     @RequestMapping(value = "/getAll/{employeeId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<WorkingHoursReadDTO> getAllWorkingHoursForEmployee(
-            @ApiParam(value = "id of workingHour", required = true) @PathVariable Long employeeId ) {
+            @ApiParam(value = "id of workingHour", required = true) @PathVariable Long employeeId,
+            HttpServletRequest request) {
+
+        if (employeeId == null) {
+            String msg = "working Hours Id must be not null ";
+            throw new PathVariableNullException(msg);
+        }
+
+        if (request.isUserInRole("ROLE_USER")) {
+            if (userService.checkLoginUserHavePetitionForThisInfo(employeeId, request)) {
+                throw new AccessDeniedException("You don't have permit to get iformation about employee with id=" + employeeId);
+            }
+        }
 
         List<WorkingHours> workingHours = workingHoursService.getAllWithEmployeeId(employeeId);
         if (workingHours.isEmpty()) {

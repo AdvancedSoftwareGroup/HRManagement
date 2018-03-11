@@ -5,6 +5,7 @@ import net.restapp.dto.UserUpdatePasswordDTO;
 import net.restapp.exception.EntityAlreadyExistException;
 import net.restapp.model.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface UserService {
     void updateUserEmailById(Long userId, UserUpdateEmailDTO dto);
 
     void updateUserRole(User user, Long roleId) throws AccessDeniedException;
+
+    boolean checkLoginUserHavePetitionForThisInfo(Long employeeId, HttpServletRequest request);
 }
