@@ -18,4 +18,9 @@ public interface WorkingHoursService {
     List<Employees> findAllEmployeeForDate(Date date);
 
     Integer getAvailableVacationDay(Long id);
+
+    List<Employees> getAvailableEmployeesForDate(Date date);
+
+    List<WorkingHours> getAllWithEmployeeId(Long employeeId);
+
 }

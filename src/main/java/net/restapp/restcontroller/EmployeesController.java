@@ -160,7 +160,7 @@ public class EmployeesController {
     }
 
 ////-------------------------------add --------------------------------------------------------
-    @ApiOperation(value = "Create employee")
+    @ApiOperation(value = "Create employee", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Employee successfully created"),
             @ApiResponse(code = 401, message = "You are not authorized to create employee"),

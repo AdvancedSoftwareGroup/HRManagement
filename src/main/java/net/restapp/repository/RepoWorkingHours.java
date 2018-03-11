@@ -17,4 +17,6 @@ public interface RepoWorkingHours extends JpaRepository<WorkingHours, Long> {
     @Query("select em FROM Employees em where em.id = ?1")
     Integer getAvailableVacationDay(Long id);
 
+    @Query(value = "SELECT * FROM workinghours WHERE employees_id = ?1", nativeQuery = true)
+    List<WorkingHours> findAllWithEmployeeId(Long employeeId);
 }
