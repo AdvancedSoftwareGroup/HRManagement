@@ -124,7 +124,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="10" author="Anulich Svitlana">
+    <changeSet id="8" author="Anulich Svitlana">
         <createTable tableName="workinghours">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
@@ -150,7 +150,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="14" author="Anulich Svitlana">
+    <changeSet id="9" author="Anulich Svitlana">
         <createTable tableName="archive_salary">
             <column name="id" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>

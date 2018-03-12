@@ -23,4 +23,5 @@ public interface WorkingHoursService {
 
     List<WorkingHours> getAllWithEmployeeId(Long employeeId);
 
+    List<WorkingHours> getAllForPeriodAndEployee(Date startDate, Date endDate, Long employeeId);
 }

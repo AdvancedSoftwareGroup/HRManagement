@@ -21,7 +21,7 @@
     </changeSet>
 
     <!--insert data to the table status-->
-    <changeSet id="5" author="Anulich Svitlana" >
+    <changeSet id="2" author="Anulich Svitlana" >
         <insert tableName="status">
             <column name="name" value="WORK"/>
             <column name="salary_coef" value="1"/>
@@ -32,7 +32,7 @@
         </insert>
         <insert tableName="status">
             <column name="name" value="HOSPITAL"/>
-            <column name="salary_coef" value="0.8"/>
+            <column name="salary_coef" value="1"/>
         </insert>
         <insert tableName="status">
             <column name="name" value="REMOTE_WORK"/>
@@ -49,8 +49,16 @@
     <changeSet id="3" author="Anulich Svitlana" >
         <insert tableName="users">
             <column name="email" value="svitlana.anulich@gmail.com"/>
-            <column name="password" value="eeeeee"/>
+            <column name="password" value="$2a$10$.Ot5H4mr5l2IEax6YHe0G.u0a8GPw49V6fW32oTECSvTqQIwqiVnO"/>
             <column name="role_id" value="1"/>
+        </insert>
+    </changeSet>
+
+    <!--insert data to the table event-->
+    <changeSet id="4" author="Anulich Svitlana" >
+        <insert tableName="event">
+            <column name="name" value="Null event"/>
+            <column name="salary_coef" value="1"/>
         </insert>
     </changeSet>
 

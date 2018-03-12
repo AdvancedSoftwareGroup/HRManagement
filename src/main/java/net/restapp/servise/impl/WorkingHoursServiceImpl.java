@@ -1,5 +1,6 @@
 package net.restapp.servise.impl;
 
+import net.restapp.exception.EntityConstraintException;
 import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
 import net.restapp.repository.RepoWorkingHours;
@@ -7,6 +8,7 @@ import net.restapp.servise.CountService;
 import net.restapp.servise.EmployeesService;
 import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ConstantException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,6 +32,11 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     @Transactional
     @Override
     public void save(WorkingHours workingHours) {
+        if (workingHours.getStatus().getId() > 1 && workingHours.getStatus().getId() < 6){
+            if (workingHours.getEvent().getId() != 1) {
+                throw new EntityConstraintException("for 1 < statusid < 6 event id must be equal 1");
+            }
+        }
         BigDecimal salary = countService.calculatePaymentOfEvent(workingHours);
         workingHours.setSalary(salary);
         repoWorkingHours.save(workingHours);
@@ -86,6 +93,11 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     @Override
     public List<WorkingHours> getAllWithEmployeeId(Long employeeId) {
         return repoWorkingHours.findAllWithEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<WorkingHours> getAllForPeriodAndEployee(Date startDate, Date startDate1, Long employeeId) {
+        return repoWorkingHours.getAllForPeriodAndEployee(startDate,startDate1,employeeId);
     }
 
 }

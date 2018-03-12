@@ -2,15 +2,20 @@ package net.restapp.servise.impl;
 
 import net.restapp.exception.NotEnoughHoursException;
 import net.restapp.model.ArchiveSalary;
+import net.restapp.model.EmployeeSheet;
+import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
 import net.restapp.servise.ArchiveSalaryService;
 import net.restapp.servise.CountService;
 import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -53,6 +58,36 @@ public class CountServiceImp implements CountService {
 
         return salary;
     }
+
+    /**
+     * Calculate calarySheet for Employee
+     */
+    @Override
+    public EmployeeSheet calculateEmployeeSheet(Employees employees) {
+
+        Calendar myCal = Calendar.getInstance();
+        myCal.add(Calendar.MONTH, -1);
+        myCal.set(Calendar.DAY_OF_MONTH, 1);
+        Date startDate = myCal.getTime();
+
+        int dayInMonth = myCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        myCal.set(Calendar.DAY_OF_MONTH, dayInMonth);
+        Date endDate = myCal.getTime();
+
+        List<WorkingHours> list = workingHoursService.getAllForPeriodAndEployee(startDate,endDate,employees.getId());
+
+        BigDecimal sum = BigDecimal.valueOf(0);
+        for (WorkingHours wh: list) {
+            sum = sum.add(wh.getSalary());
+        }
+        EmployeeSheet employeeSheet = new EmployeeSheet();
+        employeeSheet.setDate(Calendar.getInstance().getTime());
+        employeeSheet.setEmployees(employees);
+        employeeSheet.setTotalSalary(sum);
+        return employeeSheet;
+    }
+
+
 
     /**
      * Calculate salary for employee with status Hospital
