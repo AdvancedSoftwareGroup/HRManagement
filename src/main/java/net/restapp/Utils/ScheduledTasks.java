@@ -45,12 +45,11 @@ public class ScheduledTasks {
             archiveSalaryService.save(archiveSalary);
 
             //send email
-            if (employee.getId()== 2) {
-                Email emailOb = new Email();
-                String mail = employeeSheet.getEmployees().getUser().getEmail();
-                String sendingMessage = "You salary for last month is " + employeeSheet.getTotalSalary();
-                emailOb.sendEmail(sender, mail, sendingMessage);
-            }
+            Email emailOb = new Email();
+            String mail = employeeSheet.getEmployees().getUser().getEmail();
+            String sendingMessage = "You salary for last month is " + employeeSheet.getTotalSalary();
+            emailOb.sendEmail(sender, mail, sendingMessage);
+
         }
     }
 
