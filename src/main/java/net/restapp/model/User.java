@@ -1,11 +1,9 @@
 package net.restapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import net.restapp.json.UserJsonSerializer;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -15,8 +13,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = "users")
 @Getter
 @Setter
-@JsonSerialize(using = UserJsonSerializer.class)
 @EqualsAndHashCode
+
 public class User {
 
     @Id

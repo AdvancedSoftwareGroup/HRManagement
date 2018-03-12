@@ -10,6 +10,5 @@ public interface RepoEmployees extends JpaRepository<Employees,Long> {
 
     @Query(value = "SELECT * FROM employees WHERE position_id = ?1", nativeQuery = true)
     Employees findAllWithPositionId(Long id);
-
 }
 

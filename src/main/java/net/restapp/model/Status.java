@@ -26,6 +26,7 @@ public class Status {
     @NotNull(message = "This field must be NOT NULL")
     private String name;
 
+    @NotNull(message = "This field must be NOT NULL")
     @Column(name = "salary_coef")
     private BigDecimal salary_coef;
 

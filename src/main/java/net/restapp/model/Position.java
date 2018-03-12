@@ -4,7 +4,6 @@ import com.sun.istack.internal.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import net.restapp.Validator.RegexpPatterns;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 @Table(name = "position")
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"department"})
 public class Position {
 
     @Id
@@ -23,8 +22,6 @@ public class Position {
 
     @Column(name = "name")
     @NotNull(message = "This field must be NOT NULL")
-    @Pattern(regexp= RegexpPatterns.patternStringWithNumbersLettersAndDash,
-            message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
     private String name;
 
     @Column(name ="dayForVacation")
@@ -33,8 +30,6 @@ public class Position {
 
     @Column(name = "salary")
     @NotNull(message = "This field must be NOT NULL")
-    @DecimalMin(value = "0.00")
-    @DecimalMax(value = "99999.00")
     private BigDecimal salary;
 
     @ManyToOne

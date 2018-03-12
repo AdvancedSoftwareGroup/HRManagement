@@ -1,12 +1,9 @@
 package net.restapp.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import net.restapp.json.EmployeesJsonSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,8 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@JsonSerialize(using = EmployeesJsonSerializer.class)
-@EqualsAndHashCode(exclude = { "archiveSalary", "workingHoursList" })
+@EqualsAndHashCode(exclude = { "archiveSalary", "workingHoursList", "user", "position"})
 public class Employees {
 
     @Id
@@ -30,15 +26,20 @@ public class Employees {
     @Column(name = "first_name")
     private String firstName;
 
+    @NotNull
     @Column(name = "last_name")
     private String lastName;
 
+    @NotNull
     @Column(name ="availableVacationDay")
     private int availableVacationDay;// available day for Vacation
 
+    @NotNull
     @Column(name = "experience")
+    //("Experience it's count of month")
     private int experience;
 
+    @NotNull
     @Column(name = "startWorkingDate")
     private Date startWorkingDate;
 

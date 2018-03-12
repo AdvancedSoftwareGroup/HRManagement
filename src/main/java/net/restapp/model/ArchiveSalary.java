@@ -1,7 +1,5 @@
 package net.restapp.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,7 +13,6 @@ import java.util.Date;
 @Table(name = "archive_salary")
 @Getter
 @Setter
-@ApiModel
 @EqualsAndHashCode(exclude = "employee")
 public class ArchiveSalary {
 

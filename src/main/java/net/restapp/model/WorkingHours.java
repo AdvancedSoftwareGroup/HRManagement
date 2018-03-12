@@ -8,18 +8,17 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "workinghours")
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "employees")
 public class WorkingHours {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "startTime")

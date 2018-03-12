@@ -25,8 +25,6 @@ public class Department {
 
     @Column(name = "name")
     @NotNull(message = "This field must be NOT NULL")
-    @Pattern(regexp= RegexpPatterns.patternStringWithNumbersLettersAndDash,
-            message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
     private String name;
 
     @JsonIgnore

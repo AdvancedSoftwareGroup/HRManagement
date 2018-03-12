@@ -1,8 +1,11 @@
 package net.restapp.restcontroller;
 
 import io.swagger.annotations.*;
+import net.restapp.dto.EventCreateDTO;
+import net.restapp.dto.EventReadDTO;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
+import net.restapp.mapper.DtoMapper;
 import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Event;
 import net.restapp.servise.EventService;
@@ -23,24 +26,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/event")
 @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
-@Api(value="event", description="Operations pertaining to event in HRManagement")
+@Api(value="event", description="Operations pertaining to event")
 public class EventController {
 
     @Autowired
     EventService eventService;
 
-    @ApiOperation(value = "View event by id", response = ArchiveSalary.class)
+    @Autowired
+    DtoMapper mapper;
+
+//----------------------get -------------------------
+
+    @ApiOperation(value = "View event by id", response = EventReadDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Event successfully retrieved"),
             @ApiResponse(code = 401, message = "You are not authorized to view event"),
             @ApiResponse(code = 403, message = "Accessing retrieving the event you were trying to reach is forbidden"),
-            @ApiResponse(code = 400, message = "request is not correct")
+            @ApiResponse(code = 400, message = "Wrong arguments")
     })
     @RequestMapping(value = "/{eventId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getDepartment(@ApiParam(value = "id of the Event", required = true) @PathVariable("eventId") Long eventId,
-                                                HttpServletRequest request) {
+    public EventReadDTO getDepartment(
+            @ApiParam(value = "id of the Event", required = true) @PathVariable("eventId") Long eventId) {
+
         if (eventId == null) {
             String msg = "PathVariable can't be null ";
             throw new PathVariableNullException(msg);
@@ -51,10 +60,11 @@ public class EventController {
             String msg = String.format("There is no event with id: %d", eventId);
             throw new EntityNotFoundException(msg);
         }
-        return new ResponseEntity<>(event, HttpStatus.OK);
+        return mapper.simpleFieldMap(event,EventReadDTO.class);
     }
 
-    @ApiOperation(value = "Delete event by id", response = ArchiveSalary.class)
+//-------------------------delete --------------------------------
+    @ApiOperation(value = "Delete event by id", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Event successfully deleted"),
             @ApiResponse(code = 401, message = "You are not authorized to delete event"),
@@ -65,8 +75,8 @@ public class EventController {
     @RequestMapping(value = "/{eventId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> deleteDepartment(@ApiParam(value = "id of the Event", required = true) @PathVariable("eventId") Long eventId,
-                                                   HttpServletRequest request) {
+    public ResponseEntity deleteDepartment(
+            @ApiParam(value = "id of the Event", required = true) @PathVariable("eventId") Long eventId) {
 
         if (eventId == null) {
             String msg = "PathVariable can't be null ";
@@ -81,7 +91,9 @@ public class EventController {
         eventService.delete(eventId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @ApiOperation(value = "Update event by id", response = ArchiveSalary.class)
+
+//----------------------------edit -----------------------------------
+    @ApiOperation(value = "Update event by id", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Event successfully updated"),
             @ApiResponse(code = 401, message = "You are not authorized to update event"),
@@ -92,26 +104,29 @@ public class EventController {
     @RequestMapping(value = "/{eventId}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> editDepartment(@ApiParam(value = "id of the Event", required = true)  @PathVariable("eventId") Long eventId,
-                                                 @ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid Event event,
-                                                 HttpServletRequest request) {
+    public ResponseEntity editDepartment(@ApiParam(value = "id of the Event", required = true)  @PathVariable("eventId") Long eventId,
+                                                 @ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid EventCreateDTO dto) {
 
         if (eventId == null) {
             String msg = "PathVariable can't be null ";
             throw new PathVariableNullException(msg);
         }
         Event event1 = eventService.getById(eventId);
-
-        if (event == null) {
+        if (event1 == null) {
             String msg = String.format("There is no departments with id: %d", eventId);
             throw new EntityNotFoundException(msg);
         }
+        if (dto == null) {
+            throw new EntityNullException("event can't be null");
+        }
+        Event event = mapper.map(dto,Event.class);
         event.setId(eventId);
         eventService.save(event);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @ApiOperation(value = "Save event to database", response = ArchiveSalary.class)
+//-----------------------------add  ---------------------------
+    @ApiOperation(value = "Save event to database", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Event successfully created"),
             @ApiResponse(code = 401, message = "You are not authorized to create event"),
@@ -122,20 +137,20 @@ public class EventController {
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> saveDepartment(@ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid Event event,
-                                                 UriComponentsBuilder builder,
-                                                 HttpServletRequest request) {
-        HttpHeaders httpHeaders = new HttpHeaders();
+    public ResponseEntity saveDepartment(
+            @ApiParam(value = "json body of the Event", required = true) @RequestBody @Valid EventCreateDTO dto) {
 
-        if (event == null) {
+        if (dto == null) {
             throw new EntityNullException("event can't be null");
         }
+        Event event = mapper.map(dto,Event.class);
         eventService.save(event);
 
-        httpHeaders.setLocation(builder.path("/event/getAll").buildAndExpand().toUri());
-        return new ResponseEntity<>(event, httpHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @ApiOperation(value = "Retrieve all events", response = ArchiveSalary.class, responseContainer="List")
+
+//-----------------------------getAll ---------------------------
+    @ApiOperation(value = "Retrieve all events", response = EventReadDTO.class, responseContainer="List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Events successfully retrieved"),
             @ApiResponse(code = 401, message = "You are not authorized to retrieve events"),
@@ -145,13 +160,13 @@ public class EventController {
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllDepartment(HttpServletRequest request) {
+    public List<EventReadDTO> getAllDepartment() {
         List<Event> listEvent = eventService.getAll();
         if (listEvent.isEmpty()) {
             String msg = "There is no events ";
             throw new EntityNotFoundException(msg);
         }
-        return new ResponseEntity<>(listEvent, HttpStatus.OK);
+        return  mapper.listSimpleFieldMap(listEvent,EventReadDTO.class);
     }
 
 
