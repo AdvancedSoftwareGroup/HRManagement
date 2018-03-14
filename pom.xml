@@ -28,6 +28,9 @@
         <itextpdf.version>5.5.10</itextpdf.version>
         <pdfbox.version>2.0.4</pdfbox.version>
         <bcprov.version>1.56</bcprov.version>
+        <h2.version>1.4.196</h2.version>
+        <assertj.version>3.4.1</assertj.version>
+        <spring.secutity.test.version>4.2.3.RELEASE</spring.secutity.test.version>
     </properties>
     <dependencies>
         <!-- Spring -->
@@ -47,12 +50,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -127,8 +124,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-        <!--<version>1.4.3.RELEASE</version>-->
-    </dependency>
+        </dependency>
 
     <!-- Email end-->
 
@@ -155,6 +151,31 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>13.0</version>
+        </dependency>
+
+        <!--- For tests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>${spring.secutity.test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

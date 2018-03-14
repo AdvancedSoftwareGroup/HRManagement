@@ -11,6 +11,10 @@ import javax.validation.constraints.Pattern;
 
 import javax.persistence.*;
 import java.util.List;
+/**
+ * The class implements a set of methods for working
+ * with entities of the {@link Employees} class.
+ */
 
 @Entity
 @Table(name = "department")
@@ -28,9 +32,8 @@ public class Department {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department",cascade = CascadeType.PERSIST)
     private List<Position> positions;
-
 
 
 }

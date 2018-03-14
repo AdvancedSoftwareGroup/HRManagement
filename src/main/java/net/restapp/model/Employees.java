@@ -1,21 +1,23 @@
 package net.restapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+/**
+ * The class implements a set of methods for working
+ * with entities of the {@link Employees} class.
+ */
 
 @Entity
 @Table(name = "employees")
-
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = { "archiveSalary", "workingHoursList", "user", "position"})
+
 public class Employees {
 
     @Id
@@ -43,11 +45,12 @@ public class Employees {
     @Column(name = "startWorkingDate")
     private Date startWorkingDate;
 
-    @OneToOne
+    @NotNull
+    @OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "position_id")
     private Position position;
 
