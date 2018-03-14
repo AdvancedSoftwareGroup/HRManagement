@@ -73,11 +73,13 @@ public class RepoUserTest {
      * Generate User
      */
     private User createUser(){
+        Role role = new Role();
+        role.setName("role 1");
+        entityManager.persist(role);
+
         User user = new User();
         user.setEmail("sveta@gmail.com");
         user.setPassword("pass");
-        Role role = new Role();
-        role.setName("role 1");
         user.setRole(role);
         return user;
     }

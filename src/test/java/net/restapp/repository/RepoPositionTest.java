@@ -36,6 +36,8 @@ public class RepoPositionTest {
     public void findOne() {
         Department department = new Department();
         department.setName("Department 1");
+        entityManager.persist(department);
+
         Position position = new Position();
         position.setDepartment(department);
         position.setDayForVacation(12);

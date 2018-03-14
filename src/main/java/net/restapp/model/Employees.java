@@ -32,11 +32,9 @@ public class Employees {
     @Column(name = "last_name")
     private String lastName;
 
-    @NotNull
     @Column(name ="availableVacationDay")
     private int availableVacationDay;// available day for Vacation
 
-    @NotNull
     @Column(name = "experience")
     //("Experience it's count of month")
     private int experience;
@@ -46,11 +44,11 @@ public class Employees {
     private Date startWorkingDate;
 
     @NotNull
-    @OneToOne(cascade=CascadeType.PERSIST)
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(cascade=CascadeType.PERSIST)
+    @OneToOne
     @JoinColumn(name = "position_id")
     private Position position;
 

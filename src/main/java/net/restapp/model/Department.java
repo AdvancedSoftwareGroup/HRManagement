@@ -13,7 +13,7 @@ import javax.persistence.*;
 import java.util.List;
 /**
  * The class implements a set of methods for working
- * with entities of the {@link Employees} class.
+ * with entities of the {@link Department} class.
  */
 
 @Entity
@@ -32,7 +32,7 @@ public class Department {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "department",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "department")
     private List<Position> positions;
 
 

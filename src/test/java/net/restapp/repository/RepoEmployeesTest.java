@@ -92,11 +92,15 @@ public class RepoEmployeesTest {
         Employees employees = createEmployee(false);
         Department department = new Department();
         department.setName("department 1");
+        entityManager.persist(department);
+
         Position position = new Position();
         position.setDayForVacation(12);
         position.setDepartment(department);
         position.setName("position 1");
         position.setSalary(BigDecimal.valueOf(12323));
+        entityManager.persist(position);
+
         employees.setPosition(position);
         return employees;
     }
@@ -104,25 +108,28 @@ public class RepoEmployeesTest {
     /**
      * Create Employee with User
      */
-    private Employees createEmployee(boolean isUserNull) {
+    public Employees createEmployee(boolean isUserNull) {
         Employees employees = new Employees();
+        if (isUserNull) {
+            employees.setUser(null);
+        } else {
+            Role role = new Role();
+            role.setName("test role");
+            entityManager.persist(role);
+
+            User user = new User();
+            user.setEmail("email@gmail.com");
+            user.setPassword("ssssss");
+            user.setRole(role);
+            entityManager.persist(user);
+            employees.setUser(user);
+        }
+
         employees.setFirstName("first Name");
         employees.setLastName("Last name");
         employees.setAvailableVacationDay(10);
         employees.setExperience(23);
         employees.setStartWorkingDate(Calendar.getInstance().getTime());
-        if (isUserNull) {
-            employees.setUser(null);
-        } else {
-            User user = new User();
-            user.setEmail("email@gmail.com");
-            user.setPassword("ssssss");
-            Role role = new Role();
-            role.setName("test role");
-            user.setRole(role);
-
-            employees.setUser(user);
-        }
         return employees;
     }
 

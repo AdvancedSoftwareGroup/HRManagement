@@ -34,7 +34,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "role_id")
     @NotNull
     private Role role;

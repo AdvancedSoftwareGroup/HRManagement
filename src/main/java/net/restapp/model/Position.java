@@ -37,7 +37,7 @@ public class Position {
     @NotNull(message = "This field must be NOT NULL")
     private BigDecimal salary;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "department_id")
     @NotNull(message = "This field must be NOT NULL")
     private Department department;
