@@ -60,15 +60,15 @@ public class RestResponseEntityExceptionHandler {
         ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
-//
-//    /**
-//     * The method transforms an exception {@link IllegalArgumentException} to the mode of {@link ErrorBody}
-//     */
-//    @ExceptionHandler(value = {IllegalArgumentException.class})
-//    protected ResponseEntity<ErrorBody> IllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
-//        ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
-//        return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-//    }
+
+    /**
+     * The method transforms an exception {@link IllegalArgumentException} to the mode of {@link ErrorBody}
+     */
+    @ExceptionHandler(value = {IllegalArgumentException.class})
+    protected ResponseEntity<ErrorBody> IllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
+        ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
 
 
 

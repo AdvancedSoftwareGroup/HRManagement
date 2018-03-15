@@ -1,13 +1,23 @@
 package net.restapp.servise;
 
-import org.springframework.mail.javamail.JavaMailSender;
-
 import java.io.File;
 
 public interface EmailService {
 
-    //Отправить 1 простое текстовое сообщение на указаный email
-    void sendEmail(String email, String massageText);
+    /**
+     * Send email
+     * @param email - email address for sending
+     * @param title - email title
+     * @param massageText - letter body
+     */
+    void sendEmail(String email, String title, String massageText);
 
-    void sendPDF(String email, String massageText, File file);
+    /**
+     * Send email with PDF file
+     * @param email - email address for sending
+     * @param title - email title
+     * @param massageText - letter body
+     * @param file - pdf file
+     */
+    void sendPDF(String email, String title, String massageText, File file);
 }

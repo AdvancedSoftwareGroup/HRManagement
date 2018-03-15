@@ -34,7 +34,7 @@ public class DepartmentServiceImpl implements IService<Department> {
 
     /**
      * The method calls a repository's method for save a department
-     * @param department
+     * @param department - department
      */
     @Override
     public void save(Department department) {
@@ -80,6 +80,7 @@ public class DepartmentServiceImpl implements IService<Department> {
 
     /**
      * The method calls repository's method for find a department by ID
+     * @param id - department's id
      */
     @Override
     public Department getById(Long id) {

@@ -9,18 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
-public interface UserService {
-
-    void save(User user) throws EntityAlreadyExistException;
-
-    void delete(Long id) throws Exception;
-
-    List<User> getAll();
-
-    User getById(Long id);
+public interface UserService extends IService<User>{
 
     User findByEmail(String username);
-
 
     List<User> getAllByRoleId(Long id);
 

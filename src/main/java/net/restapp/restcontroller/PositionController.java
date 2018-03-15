@@ -7,7 +7,7 @@ import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
 import net.restapp.model.Position;
-import net.restapp.servise.PositionService;
+import net.restapp.servise.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ import java.util.List;
 public class PositionController {
 
     @Autowired
-    PositionService positionService;
+    IService<Position> positionService;
 
     @Autowired
     DtoMapper mapper;

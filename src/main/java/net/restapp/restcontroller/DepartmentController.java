@@ -8,6 +8,7 @@ import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
 import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Department;
+import net.restapp.servise.IService;
 import net.restapp.servise.impl.DepartmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ import java.util.List;
 public class DepartmentController {
 
     @Autowired
-    DepartmentServiceImpl departmentService;
+    IService<Department> departmentService;
 
     @Autowired
     DtoMapper mapper;

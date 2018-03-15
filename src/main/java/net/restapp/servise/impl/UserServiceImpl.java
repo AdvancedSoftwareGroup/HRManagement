@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) throws AccessDeniedException {
-        if (id == 1) throw new AccessDeniedException("cant delete user with id=1");
+    public void delete(Long id) {
+        if (id == 1) throw new IllegalArgumentException("cant delete user with id=1");
         repoUser.delete(id);
     }
 

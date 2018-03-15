@@ -56,7 +56,7 @@ public class EventServiceImplTest {
      * The test-method for same-named service's default method that save null entity.
      */
     @Test
-    public void saveNull(){
+    public void saveNull() {
         Event event = null;
         // Arrange
         when(repoEvent.save(event)).thenReturn(event);
@@ -71,7 +71,7 @@ public class EventServiceImplTest {
      * The test-method for same-named service's default method that save entity.
      */
     @Test
-    public void save(){
+    public void save() {
         Event event = new Event();
         event.setName("Event 1");
         // Arrange
@@ -87,7 +87,7 @@ public class EventServiceImplTest {
      * The test-method for delete method from service's
      */
     @Test
-    public void delete(){
+    public void delete() {
         // Arrange
         doNothing().when(repoEvent).delete(1L);
         // Act
