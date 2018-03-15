@@ -43,6 +43,12 @@ public class PDF {
 
         File file = new File("PDFFiles"+ File.separator+pdfName+".pdf");
 
+        if(file.delete()){
+            System.out.println(file.getName() + " is deleted!");
+        }else{
+            System.out.println("Delete operation is failed.");
+        }
+
         return file;
     }
 
