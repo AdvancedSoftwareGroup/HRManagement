@@ -10,6 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -67,6 +70,32 @@ public class RepoUserTest {
         User actualEvent = repoUser.findByEmail(user.getEmail());
 
         assertEquals(user, actualEvent);
+    }
+
+    /**
+     * The test-method for findAllByRoleId repository's method that get list entity by role ID
+     */
+    @Test
+    public void findAllByRoleId(){
+        User user = createUser();
+        List<User> list = Arrays.asList(user);
+        entityManager.persist(user);
+        entityManager.flush();
+
+        List<User> actualEvent = repoUser.findAllByRoleId(user.getRole().getId());
+
+        assertEquals(list, actualEvent);
+    }
+
+    /**
+     * The test-method for findAllByRoleId repository's method that get list entity by role ID
+     * roleId=null
+     */
+    @Test
+    public void findAllByNullRoleId(){
+        List<User> actualEvent = repoUser.findAllByRoleId(null);
+
+        assertEquals(actualEvent.isEmpty(), true);
     }
 
     /**
