@@ -17,13 +17,13 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class DepartmentIntegrTest {
-
-
     @Autowired
     RepoDepartment repoDepartment;
     @LocalServerPort
     private int port;
-
+    /**
+     * The test-method that create Department
+     */
     @Test
     public void createDepTest() {
         given().
@@ -35,6 +35,9 @@ public class DepartmentIntegrTest {
                 then().
                 assertThat().statusCode(201);
     }
+    /**
+     * The test-method that get one Department by ID.
+     */
     @Test
     public void readDepTest() {
         given().
@@ -46,6 +49,9 @@ public class DepartmentIntegrTest {
                 assertThat().body("id", equalTo(1007)).
                 assertThat().body("name", equalTo("DepName007"));
     }
+    /**
+     * The test-method for update Department by ID.
+     */
     @Test
     public void putNewNameValueToDepTest() {
         Department department = createDepartment();
@@ -59,6 +65,9 @@ public class DepartmentIntegrTest {
                 then().
                 assertThat().statusCode(204);
     }
+    /**
+     * The test-method for read all Departments
+     */
     @Test
     public void readAllDepTest(){
         given().
@@ -69,6 +78,9 @@ public class DepartmentIntegrTest {
                 assertThat().statusCode(200).
                 assertThat().body("[0].id", equalTo(1007));
     }
+    /**
+     * The test-method for delete Department by ID
+     */
     @Test
     public void deleteDepTest(){
         given().
@@ -78,6 +90,9 @@ public class DepartmentIntegrTest {
                 then().
                 assertThat().statusCode(204);
     }
+    /**
+     * Test entity which is used in test - methods of this class
+     */
     public static Department createDepartment(){
         Department department1 = new Department();
         department1.setId(1007l);
