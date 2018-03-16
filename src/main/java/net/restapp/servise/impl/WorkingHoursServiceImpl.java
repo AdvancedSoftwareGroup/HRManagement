@@ -57,6 +57,10 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
         repoWorkingHours.save(workingHours);
     }
 
+    /**
+     * Check is employee free and have enough time for event
+     * @param workingHours - workingHours
+     */
     private void isEmployeeFree(WorkingHours workingHours) {
         BigDecimal sumHours = repoWorkingHours.getSumWorkingHourForEmployeeAndDate(
                 workingHours.getStartTime(),
@@ -72,6 +76,10 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
 
     }
 
+    /**
+     * Check equivalents of status ID and events ID
+     * @param workingHours - workingHours
+     */
     private void isWeCanAddEvent(WorkingHours workingHours) {
         if (workingHours.getStatus().getId() > 1 && workingHours.getStatus().getId() < 6){
             if (workingHours.getEvent().getId() != 1) {

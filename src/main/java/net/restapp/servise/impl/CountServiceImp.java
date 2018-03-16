@@ -19,19 +19,34 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Class use for calculation payment for event, month salary
+ */
 
 @Service
 public class CountServiceImp implements CountService {
 
+    /**
+     * The field of WorkingHours service's layer that is called for use it's methods
+     */
     @Autowired
     WorkingHoursService workingHoursService;
 
+    /**
+     * The field of ArchiveSalary service's layer that is called for use it's methods
+     */
     @Autowired
     ArchiveSalaryService archiveSalaryService;
 
+    /**
+     * The field of Employee service's layer that is called for use it's methods
+     */
     @Autowired
     EmployeesService employeesService;
 
+    /**
+     * Constants
+     */
     private final static int WORK_HOURS_PER_DAY = 8;
     private final static int AVERAGE_WORKING_DAY_PER_MONTH = 21;
     private final static BigDecimal SICK_COEF_TO_THREE_YEAR = BigDecimal.valueOf(0.5);
@@ -43,6 +58,8 @@ public class CountServiceImp implements CountService {
 
     /**
      * Calculate salary for event with status per hours
+     * @param workingHours - workingHours
+     * @return - salary for event
      */
     public BigDecimal calculatePaymentOfEvent(WorkingHours workingHours) {
 
@@ -71,7 +88,9 @@ public class CountServiceImp implements CountService {
     }
 
     /**
-     * Calculate salarySheet for Employee
+     * Calculate month salary and create salarySheet for Employee
+     * @param employees - employee
+     * @return - employee sheet
      */
     @Override
     public EmployeeSheet calculateEmployeeSheet(Employees employees) {
@@ -102,7 +121,7 @@ public class CountServiceImp implements CountService {
 
     /**
      * Calculate salary for employee with status Hospital
-     *
+     * @param workingHours  - workingHours
      * @return salary for hours from workingHours.getHour.
      */
     private BigDecimal calculatePaymentForHospital(WorkingHours workingHours) {
@@ -113,7 +132,10 @@ public class CountServiceImp implements CountService {
     }
 
     /**
-     * Calculate hospital salary depends of working experience
+     * Calculate hospital payment depends of working experience
+     * @param workingHours - workingHours
+     * @param middleSalary - middle salary for period
+     * @return - hospital payment per month
      */
     private BigDecimal getMiddleHospitalSalaryIncludeWorkExperience(WorkingHours workingHours, BigDecimal middleSalary) {
         Date startWorking = workingHours.getEmployees().getStartWorkingDate();
@@ -138,9 +160,11 @@ public class CountServiceImp implements CountService {
         return salary;
     }
 
-
     /**
      * Return count month between two dates
+     * @param startDate - start date
+     * @param endDate - end date
+     * @return - count of month
      */
     private long monthsBetween(Date startDate, Date endDate) {
         final Calendar d1 = Calendar.getInstance();
@@ -152,8 +176,8 @@ public class CountServiceImp implements CountService {
 
     /**
      * Calculate payment for employee with status vacation
-     *
-     * @return salary for hours from workingHours.getHour.
+     * @param workingHours - workingHours
+     * @return -salary for hours from workingHours.getHour.
      */
     private BigDecimal calculatePaymentForVacation(WorkingHours workingHours) {
         BigDecimal middleSalary = getMiddleSalaryForPeriod(workingHours, COUNT_MONTH_FOR_CALCULATE_VACATION_PAYMENT);
@@ -174,7 +198,10 @@ public class CountServiceImp implements CountService {
     }
 
     /**
-     * Calculate middle salary for last count month
+     * Calculate middle salary for last countMonth for employee
+     * @param workingHours - workingHours
+     * @param countMonth - count of month
+     * @return - middle month salary for employee
      */
     private BigDecimal getMiddleSalaryForPeriod(WorkingHours workingHours, int countMonth) {
         Calendar cal = Calendar.getInstance();

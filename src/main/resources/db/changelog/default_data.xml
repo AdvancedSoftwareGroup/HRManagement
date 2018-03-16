@@ -39,7 +39,7 @@
             <column name="salary_coef" value="1"/>
         </insert>
         <insert tableName="status">
-            <column name="name" value="APSENT"/>
+            <column name="name" value="ABSENT"/>
             <column name="salary_coef" value="0"/>
         </insert>
     </changeSet>
