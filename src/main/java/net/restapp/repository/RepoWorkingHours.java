@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,18 @@ public interface RepoWorkingHours extends JpaRepository<WorkingHours, Long> {
      * @return - list workingHours
      */
     @Query(value = "SELECT * FROM workinghours WHERE start_time between ?1 and ?2 and employees_id = ?3", nativeQuery = true)
-    List<WorkingHours> getAllForPeriodAndEployee(Date startDate, Date endDate, Long employeeId);
+    List<WorkingHours> findAllForPeriodAndEployee(Date startDate, Date endDate, Long employeeId);
 
+    /**
+     * Get all workingHour for employee and period date between startDate and endDate
+     * @param date - date
+     * @param employee - employee
+     * @return - list workingHours
+     */
+    @Query("select u FROM WorkingHours u where u.startTime =?1 and u.employees = ?2")
+    List<WorkingHours> findEmployeeForDate(Date date, Employees employee);
+
+    @Query("select sum(wh.hours) FROM WorkingHours wh where wh.startTime = ?1 and wh.employees = ?2")
+    BigDecimal getSumWorkingHourForEmployeeAndDate(Date date, Employees employees);
 
 }

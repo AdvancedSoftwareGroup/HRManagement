@@ -1,9 +1,6 @@
 package net.restapp.exception.handler;
 
-import net.restapp.exception.EntityConstraintException;
-import net.restapp.exception.EntityNullException;
-import net.restapp.exception.NotEnoughHoursException;
-import net.restapp.exception.PathVariableNullException;
+import net.restapp.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,6 +92,19 @@ public class RestResponseEntityExceptionHandler {
      */
     @ExceptionHandler(value = {IllegalArgumentException.class})
     protected ResponseEntity<ErrorBody> IllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
+        ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * The method transforms an exception {@link IllegalArgumentException} to the mode of {@link ErrorBody}
+     *
+     * @param ex      - gotten exception
+     * @param request - HTTP request
+     * @return response entity
+     */
+    @ExceptionHandler(value = {EmployeeNotAbleToWorkException.class})
+    protected ResponseEntity<ErrorBody> EmployeeNotAbleToWorkException(EmployeeNotAbleToWorkException ex, HttpServletRequest request) {
         ErrorBody errorBody = getErrorBody(ex, request, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(errorBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

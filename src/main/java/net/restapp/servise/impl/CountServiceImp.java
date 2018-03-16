@@ -7,6 +7,7 @@ import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
 import net.restapp.servise.ArchiveSalaryService;
 import net.restapp.servise.CountService;
+import net.restapp.servise.EmployeesService;
 import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,17 @@ public class CountServiceImp implements CountService {
     @Autowired
     ArchiveSalaryService archiveSalaryService;
 
+    @Autowired
+    EmployeesService employeesService;
+
     private final static int WORK_HOURS_PER_DAY = 8;
     private final static int AVERAGE_WORKING_DAY_PER_MONTH = 21;
+    private final static BigDecimal SICK_COEF_TO_THREE_YEAR = BigDecimal.valueOf(0.5);
+    private final static BigDecimal SICK_COEF_TO_FIVE_YEAR = BigDecimal.valueOf(0.6);
+    private final static BigDecimal SICK_COEF_TO_EIGHT_YEAR = BigDecimal.valueOf(0.7);
+    private final static BigDecimal SICK_COEF_OVER_EIGHT_YEAR = BigDecimal.valueOf(1);
+    private final static int COUNT_MONTH_FOR_CALCULATE_HOSPITAL_PAYMENT = 6;
+    private final static int COUNT_MONTH_FOR_CALCULATE_VACATION_PAYMENT = 12;
 
     /**
      * Calculate salary for event with status per hours
@@ -41,7 +51,7 @@ public class CountServiceImp implements CountService {
 
         if (statusId == 2) {
             BigDecimal availableHours = BigDecimal.valueOf(
-                    workingHoursService.getAvailableVacationDay(workingHours.getEmployees().getId())
+                    employeesService.getAvailableVacationDay(workingHours.getEmployees().getId())
                             * WORK_HOURS_PER_DAY);
             if (availableHours.compareTo(workingHours.getHours()) < 0) {
                 throw new NotEnoughHoursException("Don't enough hours fo vacation. Available hours=" + availableHours);
@@ -61,7 +71,7 @@ public class CountServiceImp implements CountService {
     }
 
     /**
-     * Calculate calarySheet for Employee
+     * Calculate salarySheet for Employee
      */
     @Override
     public EmployeeSheet calculateEmployeeSheet(Employees employees) {
@@ -96,7 +106,7 @@ public class CountServiceImp implements CountService {
      * @return salary for hours from workingHours.getHour.
      */
     private BigDecimal calculatePaymentForHospital(WorkingHours workingHours) {
-        BigDecimal middleSalary = getMiddleSalaryForPeriod(workingHours, 6);
+        BigDecimal middleSalary = getMiddleSalaryForPeriod(workingHours, COUNT_MONTH_FOR_CALCULATE_HOSPITAL_PAYMENT);
         BigDecimal middleSalWithExp = getMiddleHospitalSalaryIncludeWorkExperience(workingHours, middleSalary);
         BigDecimal paymentPerHour = paymentPerHour(middleSalWithExp);
         return paymentPerHour.multiply(workingHours.getHours());
@@ -113,28 +123,21 @@ public class CountServiceImp implements CountService {
         BigDecimal salary;
 
         if (workingYears > 8){
-            salary = middleSalary;
+            salary = middleSalary.multiply(SICK_COEF_OVER_EIGHT_YEAR);
         } else {
             if (workingYears > 5){
-                salary = calculatePercentageOfNumber(middleSalary,BigDecimal.valueOf(70));
+                salary = middleSalary.multiply(SICK_COEF_TO_EIGHT_YEAR);
             } else {
                 if (workingYears > 3){
-                    salary = calculatePercentageOfNumber(middleSalary,BigDecimal.valueOf(60));
+                    salary = middleSalary.multiply(SICK_COEF_TO_FIVE_YEAR);
                 } else {
-                    salary = calculatePercentageOfNumber(middleSalary,BigDecimal.valueOf(50));
+                    salary = middleSalary.multiply(SICK_COEF_TO_THREE_YEAR);
                 }
             }
         }
         return salary;
     }
 
-    /**
-     * Calculate percent of the number
-     */
-    private BigDecimal calculatePercentageOfNumber(BigDecimal number, BigDecimal percent){
-        BigDecimal num = number.multiply(percent);
-        return num.divide(BigDecimal.valueOf(100),2,BigDecimal.ROUND_HALF_UP);
-    }
 
     /**
      * Return count month between two dates
@@ -153,7 +156,7 @@ public class CountServiceImp implements CountService {
      * @return salary for hours from workingHours.getHour.
      */
     private BigDecimal calculatePaymentForVacation(WorkingHours workingHours) {
-        BigDecimal middleSalary = getMiddleSalaryForPeriod(workingHours, 12);
+        BigDecimal middleSalary = getMiddleSalaryForPeriod(workingHours, COUNT_MONTH_FOR_CALCULATE_VACATION_PAYMENT);
 
         BigDecimal salaryPerHour = paymentPerHour(middleSalary);
 
