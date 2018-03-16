@@ -22,7 +22,8 @@ public class StatusServiceImpl implements StatusService {
 
 
     /**
-     *  The method calls a repository's method for save a status
+     * The method calls a repository's method for save a status
+     *
      * @param status - status
      */
     @Override
@@ -36,12 +37,15 @@ public class StatusServiceImpl implements StatusService {
 
     /**
      * The method calls repository's method for delete a status by ID
+     *
      * @param id - status's ID
      */
 
     @Override
     public void delete(Long id) {
-        if (id < 6 && id != 0) throw new IllegalArgumentException("cant delete Status with id <=5");
+        if (id != null) {
+            if (id < 6 && id != 0) throw new IllegalArgumentException("cant delete Status with id <=5");
+        }
         repoStatus.delete(id);
     }
 
@@ -55,6 +59,7 @@ public class StatusServiceImpl implements StatusService {
 
     /**
      * The method calls repository's method for get one status by ID
+     *
      * @param id - status's ID
      */
     @Override
@@ -64,6 +69,7 @@ public class StatusServiceImpl implements StatusService {
 
     /**
      * The method calls a repository's method for find a status by name
+     *
      * @param name - status name
      */
     @Override
@@ -73,11 +79,12 @@ public class StatusServiceImpl implements StatusService {
 
     /**
      * Find status by name and return true if it exist
+     *
      * @param status - status
      */
     @Override
     public boolean isStatusExist(Status status) {
-        return findByName(status.getName())!=null;
+        return findByName(status.getName()) != null;
     }
 
 }
