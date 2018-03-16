@@ -1,6 +1,5 @@
 package net.restapp.model;
 
-import com.sun.istack.internal.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +41,6 @@ public class Position {
     @NotNull(message = "This field must be NOT NULL")
     private Department department;
 
-    @Nullable
     @OneToOne(mappedBy = "position")
     private Employees employees;
 
