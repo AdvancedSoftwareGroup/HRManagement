@@ -94,7 +94,7 @@ public class DepartmentController {
 
     })
     @RequestMapping(value = "/{departmentId}",
-            method = RequestMethod.POST,
+            method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> editDepartment(@ApiParam(value = "id of Department", required = true) @PathVariable Long departmentId,
                                                  @ApiParam(value = "json body of Department", required = true) @RequestBody @Valid DepartmentCreateDTO dto){

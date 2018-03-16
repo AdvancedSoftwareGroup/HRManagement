@@ -34,11 +34,11 @@ public class RepoDepartmentTest {
     public void findOne() {
         Department department = new Department();
         department.setName("Department 1");
-        Department department2 = new Department();
-        department2.setName("Department 2");
+//        Department department2 = new Department();
+//        department2.setName("Department 2");
 
         entityManager.persist(department);
-        entityManager.persist(department2);
+ //       entityManager.persist(department2);
         entityManager.flush();
 
         Department actualDepartment = repoDepartment.findOne(department.getId());

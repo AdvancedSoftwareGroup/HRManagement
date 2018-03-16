@@ -8,7 +8,7 @@
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <!--insert data to the table roles-->
-    <changeSet id="1" author="Anulich Svitlana" >
+    <changeSet id="10" author="Anulich Svitlana" >
         <insert tableName="roles">
             <column name="name" value="ROLE_ADMIN"/>
         </insert>
@@ -21,7 +21,7 @@
     </changeSet>
 
     <!--insert data to the table status-->
-    <changeSet id="2" author="Anulich Svitlana" >
+    <changeSet id="11" author="Anulich Svitlana" >
         <insert tableName="status">
             <column name="name" value="WORK"/>
             <column name="salary_coef" value="1"/>
@@ -46,7 +46,7 @@
 
 
     <!--insert ADMIN to user table-->
-    <changeSet id="3" author="Anulich Svitlana" >
+    <changeSet id="12" author="Anulich Svitlana" >
         <insert tableName="users">
             <column name="email" value="svitlana.anulich@gmail.com"/>
             <column name="password" value="$2a$10$.Ot5H4mr5l2IEax6YHe0G.u0a8GPw49V6fW32oTECSvTqQIwqiVnO"/>
@@ -55,7 +55,7 @@
     </changeSet>
 
     <!--insert data to the table event-->
-    <changeSet id="4" author="Anulich Svitlana" >
+    <changeSet id="13" author="Anulich Svitlana" >
         <insert tableName="event">
             <column name="name" value="Null event"/>
             <column name="salary_coef" value="1"/>
