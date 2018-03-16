@@ -1,9 +1,15 @@
 package net.restapp.Utils;
 
-
+/**
+ * Messages for emails
+ */
 public class LettersExample {
 
-
+    /**
+     * create messa for welcome letter
+     * @param url - domain url
+     * @return - message
+     */
     public String createWelcomeMessage(String url) {
 
         return "Dear, employee.\n " +

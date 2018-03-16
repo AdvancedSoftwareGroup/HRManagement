@@ -2,23 +2,34 @@ package net.restapp.Utils;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+/**
+ * Create PDF file. Use by {@link net.restapp.servise.EmailService}
+ */
+@Slf4j
 public class PDF {
 
-    //метод создает PDF файл в папке PDFFiles и возвращяет этот файл
-    //Обязательно должна быть папка "PDFFiles" в файле с проектом!!!
-
+    /**
+     * Create PDF file from text in PDFFiles folder
+     *
+     * @param pdfName - file name
+     * @param text    - text witch convert to PDF
+     * @return - PDF file
+     */
     public static File createPDF(String pdfName, String text) {
+        //todo: create PDFFiles directory if it don't exist
+        //Обязательно должна быть папка "PDFFiles" в файле с проектом!!!
 
         Document document = new Document();
 
         try {
             //Создаем файл pdfName с расширением pdf в папке PDFFiles
-            PdfWriter.getInstance(document, new FileOutputStream("PDFFiles"+ File.separator+pdfName+".pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("PDFFiles" + File.separator + pdfName + ".pdf"));
         } catch (DocumentException e) {
             e.printStackTrace();
         } catch (FileNotFoundException x) {
@@ -41,12 +52,12 @@ public class PDF {
         }
         document.close();
 
-        File file = new File("PDFFiles"+ File.separator+pdfName+".pdf");
+        File file = new File("PDFFiles" + File.separator + pdfName + ".pdf");
 
-        if(file.delete()){
-            System.out.println(file.getName() + " is deleted!");
-        }else{
-            System.out.println("Delete operation is failed.");
+        if (file.delete()) {
+            log.info(file.getName() + " is deleted!");
+        } else {
+            log.error("Delete operation is failed.");
         }
 
         return file;

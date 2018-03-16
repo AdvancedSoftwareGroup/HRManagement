@@ -64,7 +64,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
 
     @Override
     public Integer getAvailableVacationDay(Long id) {
-        return repoWorkingHours.getAvailableVacationDay(id);
+        return employeesService.getAvailableVacationDay(id);
     }
 
     /**

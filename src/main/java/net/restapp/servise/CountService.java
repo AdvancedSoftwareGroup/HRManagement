@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
+
 public interface CountService {
 
     BigDecimal calculatePaymentOfEvent(WorkingHours workingHours);

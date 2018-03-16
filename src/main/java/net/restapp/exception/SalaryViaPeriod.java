@@ -3,6 +3,9 @@ package net.restapp.exception;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * Handler exception
+ */
 public class SalaryViaPeriod extends RuntimeException{
 
    private Date startDate;

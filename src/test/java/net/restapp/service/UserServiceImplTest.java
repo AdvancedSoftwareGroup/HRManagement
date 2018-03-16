@@ -1,5 +1,8 @@
 package net.restapp.service;
 
+import net.restapp.dto.UserReadDTO;
+import net.restapp.dto.UserUpdateEmailDTO;
+import net.restapp.dto.UserUpdatePasswordDTO;
 import net.restapp.exception.EntityAlreadyExistException;
 import net.restapp.model.Role;
 import net.restapp.model.Status;
@@ -14,8 +17,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.persistence.EntityNotFoundException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -51,21 +57,37 @@ public class UserServiceImplTest {
     @Autowired
     UserService userService;
 
+    private User user;
+    private UserUpdatePasswordDTO userPassDto;
+    private UserUpdateEmailDTO userUpdateEmailDTO;
+
     @Before
     public void init (){
-        User user = new User();
+        user = new User();
         user.setEmail("email_1");
+        user.setId(2L);
+        String pass = bCryptPasswordEncoder.encode("111");
+        user.setPassword(pass);
 
-        Mockito.when(repoUser.findByEmail("email_1"))
+        Mockito.when(repoUser.findByEmail(user.getEmail()))
                 .thenReturn(user);
-
-        Mockito.when(repoUser.findByEmail("email_2"))
-                .thenReturn(null);
 
         Mockito.when(repoRole.getOne(2L))
                 .thenReturn(new Role());
 
 
+        userPassDto = new UserUpdatePasswordDTO();
+        userPassDto.setPassword("2222");
+        userPassDto.setOldPassword(pass);
+        userPassDto.setConfirmPassword(userPassDto.getPassword());
+
+        Mockito.when(repoUser.findOne(user.getId()))
+                .thenReturn(user);
+
+        userUpdateEmailDTO = new UserUpdateEmailDTO();
+        userUpdateEmailDTO.setOld_email(user.getEmail());
+        userUpdateEmailDTO.setEmail("new email");
+        userUpdateEmailDTO.setConfirmEmail(userUpdateEmailDTO.getEmail());
     }
     /**
      * The test-method for same-named service's default method that save entity.
@@ -82,8 +104,6 @@ public class UserServiceImplTest {
      */
     @Test(expected = EntityAlreadyExistException.class)
     public void saveWithExistEmail()  {
-        User user = new User();
-        user.setEmail("email_1");
         user.setId(0);
         trySave(user);
     }
@@ -99,6 +119,9 @@ public class UserServiceImplTest {
         user.setId(0);
         trySave(user);
 
+        Mockito.when(repoUser.findByEmail("email_2"))
+                .thenReturn(null);
+
         boolean match = bCryptPasswordEncoder.matches("11111111", user.getPassword());
         assertEquals(match,true);
         assertNotEquals(user.getRole(),null);
@@ -110,13 +133,14 @@ public class UserServiceImplTest {
     @Test
     public void save(){
         User user = new User();
-        user.setPassword("eeeee");
-        user.setId(5);
+        String pass = "eeee";
+        user.setPassword(pass);
+        user.setId(2);
         trySave(user);
 
-        boolean match = bCryptPasswordEncoder.matches("11111111", user.getPassword());
-        assertEquals(match,false);
-        assertEquals(user.getRole(),null);
+        boolean match = bCryptPasswordEncoder.matches(pass, user.getPassword());
+        assertEquals(match,true);
+        assertNotEquals(user.getRole(),null);
     }
 
     /**
@@ -151,8 +175,6 @@ public class UserServiceImplTest {
      */
     @Test
     public void findByEmail(){
-        User user = new User();
-        user.setEmail("email_1");
 
         User found = userService.findByEmail(user.getEmail());
         User found2 = userService.findByEmail("new email");
@@ -161,12 +183,120 @@ public class UserServiceImplTest {
         assertEquals(found2,null);
     }
 
+    /**
+     * The test-method for updateUserPasswordById service's method that change password for User.
+     * expected exception because send null user
+     */
+    @Test (expected = EntityNotFoundException.class)
+    public void updateUserPasswordById_withNullUser(){
+        User user1 = new User();
+        user1.setId(3L);
+        when(repoUser.findOne(user1.getId())).thenReturn(null);
 
+        UserUpdatePasswordDTO dto = new UserUpdatePasswordDTO();
 
+        userService.updateUserPasswordById(user1.getId(),dto);
+    }
 
+    /**
+     * The test-method for updateUserPasswordById service's method that change password for User.
+     * expected exception because send wrong old password
+     */
+    @Test (expected = BadCredentialsException.class)
+    public void updateUserPasswordById_with_diff_pass(){
 
+        userPassDto.setOldPassword("sdsdsd");
 
+        userService.updateUserPasswordById(user.getId(),userPassDto);
 
+        boolean match = bCryptPasswordEncoder.matches(user.getPassword(), userPassDto.getPassword());
+        assertEquals(match,false);
+    }
+    /**
+     * The test-method for same-named service's method that change password for User.
+     */
+    @Test
+    public void updateUserPasswordById(){
+
+        userService.updateUserPasswordById(user.getId(),userPassDto);
+
+        boolean match = bCryptPasswordEncoder.matches(user.getPassword(), userPassDto.getPassword());
+        assertEquals(match,true);
+    }
+
+    /**
+     * The test-method for same-named service's method that change email for User.
+     */
+    @Test
+    public void updateUserEmailById(){
+
+        userService.updateUserEmailById(user.getId(),userUpdateEmailDTO);
+
+        assertEquals(user.getEmail(),userUpdateEmailDTO.getEmail());
+    }
+
+    /**
+     * The test-method for updateUserPasswordById service's method that change password for User.
+     * expected exception because send null user
+     */
+    @Test (expected = EntityNotFoundException.class)
+    public void updateUserEmailById_withNullUser(){
+        User user1 = new User();
+        user1.setId(3L);
+        when(repoUser.findOne(user1.getId())).thenReturn(null);
+
+        UserUpdateEmailDTO dto = new UserUpdateEmailDTO();
+
+        userService.updateUserEmailById(user1.getId(),dto);
+    }
+
+    /**
+     * The test-method for updateUserPasswordById service's method that change password for User.
+     * expected exception because send wrong old password
+     */
+    @Test (expected = BadCredentialsException.class)
+    public void updateUserEmailById_with_wrong_oldEmail(){
+
+        userUpdateEmailDTO.setOld_email("sdsdsd");
+
+        userService.updateUserEmailById(user.getId(),userUpdateEmailDTO);
+
+        assertEquals(user.getEmail(),userUpdateEmailDTO.getEmail());
+    }
+
+    /**
+     * The test-method for updateUserRole service's method that change role for User.
+     * expected exception because try change role for default user
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void updateUserRole_forDefaulUser(){
+        User user = new User();
+        user.setId(1);
+        userService.updateUserRole(user,3L);
+    }
+
+    /**
+     * The test-method for updateUserRole service's method that change role for User.
+     * expected exception because try change role for not exist
+     */
+    @Test(expected = EntityNotFoundException.class)
+    public void updateUserRoleForNotExistingRole(){
+        Long roleId = 6L;
+        Mockito.when(repoRole.findOne(roleId))
+                .thenReturn(null);
+        userService.updateUserRole(user,roleId);
+    }
+
+    /**
+     * The test-method for updateUserRole service's method that change role for User.
+     */
+    @Test
+    public void updateUserRole(){
+        Long roleId = 7L;
+        Mockito.when(repoRole.findOne(roleId))
+                .thenReturn(new Role());
+        userService.updateUserRole(user,roleId);
+    }
 
 
 

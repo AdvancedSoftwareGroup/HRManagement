@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * The class represents a body of exception message
+ */
 @Data
 @NoArgsConstructor
 public class ErrorBody {

@@ -1,5 +1,8 @@
 package net.restapp.Validator;
 
+/**
+ * Patterns for validation values of net.restapp.dto.* and net.restapp.model.*
+ */
 public class RegexpPatterns {
 
     public static final String patternStringWithNumbersLettersAndDash="^\\s*[\\da-zA-Z][\\da-zA-Z\\s][\\d-a-z-A-Z\\s]*$";

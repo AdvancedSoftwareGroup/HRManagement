@@ -17,7 +17,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ReflectionUtils.*;
-
+/**
+ * Class transforms DTO to entity and gets dependent entities from DB by ID that marked {@link Entity}
+ * and {@link EntityList}
+ */
 @Component
 @Slf4j
 public class DtoMapper {
@@ -82,6 +85,12 @@ public class DtoMapper {
         return MODEL_MAPPER.map(source, destination);
     }
 
+    /**
+     * Method for map list DTO object to list entity, use method of {@link ModelMapper}
+     * @param source -dto for map to entity
+     * @param destinationElement -class of entity for mapping
+     * @return mapped list entity of specified destination class
+     */
     @SuppressWarnings("unchecked")
     public <T, E> List<T> listSimpleFieldMap(List<E> source, Class<T> destinationElement) {
         List list = source.stream()
@@ -89,6 +98,7 @@ public class DtoMapper {
                 .collect(Collectors.toCollection(() -> new ArrayList(source.size())));
         return list;
     }
+
 
     @Nullable
     private Object getDtoId(Object source, Set<Field> fields) {

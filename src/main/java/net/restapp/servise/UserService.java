@@ -50,7 +50,7 @@ public interface UserService extends IService<User>{
      * @param roleId - role's ID
      * @throws AccessDeniedException - send if try change role for user with id=1 (it's main ADMIN user)
      */
-    void updateUserRole(User user, Long roleId) throws AccessDeniedException;
+    void updateUserRole(User user, Long roleId);
 
     /**
      * Check is user from HttpServletRequest have employee id equals employeeId from arguments of the method

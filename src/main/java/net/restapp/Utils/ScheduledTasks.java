@@ -5,6 +5,7 @@ import net.restapp.model.EmployeeSheet;
 import net.restapp.model.Employees;
 import net.restapp.servise.ArchiveSalaryService;
 import net.restapp.servise.CountService;
+import net.restapp.servise.EmailService;
 import net.restapp.servise.EmployeesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,22 +15,41 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Class with tasks for Scheduled
+ */
+
 @Component
 public class ScheduledTasks {
 
+    /**
+     * The field of ArchiveSalary service's layer that is called for use it's methods
+     */
     @Autowired
     ArchiveSalaryService archiveSalaryService;
 
+    /**
+     * The field of Employee service's layer that is called for use it's methods
+     */
     @Autowired
     EmployeesService employeesService;
 
+    /**
+     * The field of Count service that is called for use it's methods
+     */
     @Autowired
     CountService countService;
 
+    /**
+     * The field of Email service that is called for use it's methods
+     */
     @Autowired
-    private JavaMailSender sender;
+    private EmailService emailService;
 
 
+    /**
+     * Run calculating salary for each employee and send emails with sheets
+     */
     @Scheduled(cron = "0 0 0 1 * *")
     public void calculateSalary() {
 
@@ -44,16 +64,16 @@ public class ScheduledTasks {
             archiveSalary.setMonthSalary(employeeSheet.getTotalSalary());
             archiveSalaryService.save(archiveSalary);
 
-            //send email
-            Email emailOb = new Email();
-            String mail = employeeSheet.getEmployees().getUser().getEmail();
-            String sendingMessage = "You salary for last month is " + employeeSheet.getTotalSalary();
-            emailOb.sendEmail(sender, mail, sendingMessage);
-
+//            //send email
+           String mail = employeeSheet.getEmployees().getUser().getEmail();
+           String sendingMessage = "You salary for last month is " + employeeSheet.getTotalSalary();
+           emailService.sendEmail(mail,"You slary",sendingMessage);
         }
     }
 
-
+    /**
+     * Update available vacation days for each employee after it works a year
+     */
     @Scheduled(cron = "0 0 8 * * ?")
     public void vacantionDay() {
         List<Employees> list = employeesService.getAll();

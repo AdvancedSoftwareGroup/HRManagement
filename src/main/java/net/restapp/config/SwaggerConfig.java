@@ -10,26 +10,29 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import static springfox.documentation.builders.PathSelectors.regex;
+
+/**
+ * Configuration class for swagger
+ */
 
 @Configuration
-    @EnableSwagger2
-    public class SwaggerConfig {
+@EnableSwagger2
+public class SwaggerConfig {
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select().apis(RequestHandlerSelectors.basePackage("net.restapp.restcontroller"))
                 .paths(PathSelectors.any())
-//                .paths(regex("/salary.*"))
-//                .paths(regex("/department.*"))
-//                .paths(regex("/employees.*"))
-//                .paths(regex("/position.*"))
-//                .paths(regex("/event.*"))
-//                .paths(regex("/status.*"))
                 .build()
                 .apiInfo(metaData());
 
     }
+
+    /**
+     * Meta data for swagger
+     *
+     * @return
+     */
     private ApiInfo metaData() {
         ApiInfo apiInfo = new ApiInfo(
                 "Spring Boot REST API",
