@@ -1,6 +1,5 @@
 package net.restapp.integration;
 import net.restapp.model.Department;
-import net.restapp.model.Position;
 import net.restapp.repository.RepoDepartment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 
@@ -25,7 +21,7 @@ public class DepartmentIntegrTest {
      * The test-method that create Department
      */
     @Test
-    public void createDepTest() {
+    public void create_dep_Test() {
         given().
                 auth().basic("svitlana.anulich@gmail.com", "22222222").
                 contentType("application/json").
@@ -39,7 +35,7 @@ public class DepartmentIntegrTest {
      * The test-method that get one Department by ID.
      */
     @Test
-    public void readDepTest() {
+    public void read_dep_Test() {
         given().
                 auth().basic("svitlana.anulich@gmail.com", "22222222").
                 when().
@@ -53,7 +49,7 @@ public class DepartmentIntegrTest {
      * The test-method for update Department by ID.
      */
     @Test
-    public void putNewNameValueToDepTest() {
+    public void put_new_name_value_to_dep_Test() {
         Department department = createDepartment();
         department.setName("DepNameS");
         given().
@@ -69,7 +65,7 @@ public class DepartmentIntegrTest {
      * The test-method for read all Departments
      */
     @Test
-    public void readAllDepTest(){
+    public void read_all_dep_Test(){
         given().
                 auth().basic("svitlana.anulich@gmail.com", "22222222").
                 when().
@@ -82,7 +78,7 @@ public class DepartmentIntegrTest {
      * The test-method for delete Department by ID
      */
     @Test
-    public void deleteDepTest(){
+    public void delete_dep_Test(){
         given().
                 auth().basic("svitlana.anulich@gmail.com", "22222222").
                 when().
@@ -97,20 +93,6 @@ public class DepartmentIntegrTest {
         Department department1 = new Department();
         department1.setId(1007l);
         department1.setName("DepName007");
-        Position position1 = new Position();
-        position1.setSalary(new BigDecimal(5000));
-        position1.setDayForVacation(40);
-        position1.setName("Junior+");
-        position1.setDepartment(department1);
-        Position position2 = new Position();
-        position2.setSalary(new BigDecimal(6000));
-        position2.setDayForVacation(20);
-        position2.setName("Junior-");
-        position2.setDepartment(department1);
-        List<Position> positions = new ArrayList<>();
-        positions.add(position1);
-        positions.add(position2);
-        department1.setPositions(positions);
         return department1;
     }
 }
