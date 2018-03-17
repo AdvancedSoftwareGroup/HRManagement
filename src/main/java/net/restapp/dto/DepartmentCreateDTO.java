@@ -18,8 +18,9 @@ import javax.validation.constraints.Pattern;
 @ApiModel
 public class DepartmentCreateDTO {
 
+    private long id;
     @ApiModelProperty(position = 1)
-    @Pattern(regexp= RegexpPatterns.patternStringWithNumbersLettersAndDash,
+    @Pattern(regexp = RegexpPatterns.patternStringWithNumbersLettersAndDash,
             message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
     @NotNull(message = "name must be not null")
     private String name;

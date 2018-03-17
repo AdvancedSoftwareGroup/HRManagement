@@ -7,7 +7,10 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * The class implements a set of methods for working
+ * with entities of the {@link Status} class.
+ */
 @Entity
 @Table(name = "status")
 @Getter
@@ -26,7 +29,6 @@ public class Status {
     @NotNull(message = "This field must be NOT NULL")
     private String name;
 
-    @NotNull(message = "This field must be NOT NULL")
     @Column(name = "salary_coef")
     private BigDecimal salary_coef;
 

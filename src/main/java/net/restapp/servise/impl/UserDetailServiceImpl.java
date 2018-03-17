@@ -12,14 +12,24 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The service's layer of application for User, implements {@link org.springframework.security.core.userdetails.UserDetails}
+ */
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
+    /**
+     * The field of User repository's layer that is called for use it's methods
+     */
     @Autowired
     RepoUser repoUser;
 
-
+    /**
+     * The method calls a repository's method for find user by email
+     * @param email - user Email
+     * @return user - {@link org.springframework.security.core.userdetails.User}
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
         User user = repoUser.findByEmail(email);

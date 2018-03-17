@@ -4,12 +4,18 @@ import net.restapp.model.Status;
 
 import java.util.List;
 
-public interface StatusService {
+/**
+ * Interface for service's layer of status. Extends CRUD methods from {@link net.restapp.servise.IService}
+ */
+public interface StatusService extends IService<Status>{
 
-    void save(Status status) throws Exception;
-    void delete(Long id) throws Exception;
-    List<Status> getAll();
-    Status getById(Long id);
-    Status findByName(String name);
+    /**
+     * Find status by name ant return true if it exist
+     */
     boolean isStatusExist(Status status);
+
+    /**
+     * The method calls a repository's method for find a status by name
+     */
+    Status findByName(String name);
 }

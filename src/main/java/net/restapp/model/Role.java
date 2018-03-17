@@ -11,6 +11,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
+/**
+ * The class implements a set of methods for working
+ * with entities of the {@link Role} class.
+ */
 @Entity
 @Table(name = "roles")
 @Getter
@@ -24,8 +28,6 @@ public class Role {
 
     @Column(name = "name")
     @NotNull(message = "This field must be NOT NULL")
-    @Pattern(regexp= RegexpPatterns.patternStringWithNumbersLettersAndDash,
-            message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
     private String name;
 
     @OneToMany(mappedBy = "role")

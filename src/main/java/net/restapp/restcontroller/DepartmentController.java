@@ -8,7 +8,8 @@ import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
 import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Department;
-import net.restapp.servise.DepartmentService;
+import net.restapp.servise.IService;
+import net.restapp.servise.impl.DepartmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,13 +21,17 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/department")
+@RequestMapping(value = "/department", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
 @Api(value="department", description="Operations pertaining to department")
+@ApiResponses(value = {
+        @ApiResponse(code = 404, message = "The department you were trying to reach is not found"),
+        @ApiResponse(code = 400, message = "Wrong arguments")
+})
 public class DepartmentController {
 
     @Autowired
-    DepartmentService departmentService;
+    IService<Department> departmentService;
 
     @Autowired
     DtoMapper mapper;
@@ -37,19 +42,12 @@ public class DepartmentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved department"),
             @ApiResponse(code = 401, message = "You are not authorized to view the department by id"),
-            @ApiResponse(code = 403, message = "Accessing the department by id you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The department you were trying to reach is not found"),
-            @ApiResponse(code = 400, message = "Wrong arguments")
+            @ApiResponse(code = 403, message = "Accessing the department by id you were trying to reach is forbidden")
     })
-    @RequestMapping(value = "/{departmentId}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/{departmentId}")
+
     public DepartmentReadDTO getDepartment(@ApiParam(value = "id of Departament", required = true) @PathVariable Long departmentId){
 
-        if (departmentId == null){
-            String msg = "PathVariable can't be null ";
-            throw new PathVariableNullException(msg);
-        }
         Department department =  departmentService.getById(departmentId);
 
         if (department == null) {
@@ -64,8 +62,8 @@ public class DepartmentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Department successfully deleted"),
             @ApiResponse(code = 401, message = "You are not authorized to delete department"),
-            @ApiResponse(code = 403, message = "Accessing deletion the department you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The department you were trying to reach is not found")
+            @ApiResponse(code = 403, message = "Accessing deletion the department you were trying to reach is forbidden")
+
     })
     @RequestMapping(value = "/{departmentId}",
             method = RequestMethod.DELETE,
@@ -91,12 +89,12 @@ public class DepartmentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Department successfully updated"),
             @ApiResponse(code = 401, message = "You are not authorized to update department"),
-            @ApiResponse(code = 403, message = "Accessing updating the department you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The department you were trying to reach is not found"),
-            @ApiResponse(code = 400, message = "Wrong arguments")
+            @ApiResponse(code = 403, message = "Accessing updating the department you were trying to reach is forbidden")
+
+
     })
     @RequestMapping(value = "/{departmentId}",
-            method = RequestMethod.POST,
+            method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> editDepartment(@ApiParam(value = "id of Department", required = true) @PathVariable Long departmentId,
                                                  @ApiParam(value = "json body of Department", required = true) @RequestBody @Valid DepartmentCreateDTO dto){
@@ -123,9 +121,9 @@ public class DepartmentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list of existing departments"),
             @ApiResponse(code = 401, message = "You are not authorized to view list of existing departments"),
-            @ApiResponse(code = 403, message = "Accessing to view list of existing departments you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The departments entries not found"),
-            @ApiResponse(code = 400, message = "Wrong arguments")
+            @ApiResponse(code = 403, message = "Accessing to view list of existing departments you were trying to reach is forbidden")
+
+
     })
     @RequestMapping(value = "/getAll",
             method = RequestMethod.GET,
@@ -146,7 +144,7 @@ public class DepartmentController {
             @ApiResponse(code = 201, message = "Successfully create entry of salary"),
             @ApiResponse(code = 401, message = "You are not authorized to view the salary for period"),
             @ApiResponse(code = 403, message = "Accessing the salary for period you were trying to reach is forbidden"),
-            @ApiResponse(code = 400, message = "request is not correct")
+
     })
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,

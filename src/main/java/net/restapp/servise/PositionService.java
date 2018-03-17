@@ -2,16 +2,15 @@ package net.restapp.servise;
 
 import net.restapp.model.Position;
 
-import java.util.List;
+/**
+ * Interface for service's layer of position. Extends CRUD methods from {@link net.restapp.servise.IService}
+ */
+public interface PositionService extends IService<Position> {
 
-public interface PositionService {
-
-    void save(Position position);
-
-    void delete(Long id);
-
-    List<Position> getAll();
-
-    Position getById(Long id);
-
+    /**
+     * Check are positions have employee
+     * @param id - position id
+     * @return - if positions don't have employee return true. In ather case return false
+     */
+    boolean isPositionFree(Long id);
 }

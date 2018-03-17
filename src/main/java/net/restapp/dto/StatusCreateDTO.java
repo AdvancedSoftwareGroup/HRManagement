@@ -22,7 +22,7 @@ public class StatusCreateDTO {
 
     @ApiModelProperty(position = 1)
     @NotNull(message = "This field must be NOT NULL")
-    @Pattern(regexp= RegexpPatterns.patternStringWithNumbersLettersAndDash,
+    @Pattern(regexp = RegexpPatterns.patternStringWithNumbersLettersAndDash,
             message = RegexpPatterns.messageStringWithNumbersLettersAndDash)
     private String name;
 

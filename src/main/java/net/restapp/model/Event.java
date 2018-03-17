@@ -10,6 +10,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.List;
+/**
+ * The class implements a set of methods for working
+ * with entities of the {@link Event} class.
+ */
 
 @Entity
 @Table(name = "event")

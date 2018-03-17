@@ -2,7 +2,6 @@ package net.restapp.restcontroller;
 
 import io.swagger.annotations.*;
 
-import net.restapp.Utils.Email;
 import net.restapp.Utils.LettersExample;
 import net.restapp.dto.EmployeeCreateDTO;
 import net.restapp.dto.EmployeeReadDTO;
@@ -11,6 +10,7 @@ import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
 import net.restapp.model.Employees;
 import net.restapp.model.User;
+import net.restapp.servise.EmailService;
 import net.restapp.servise.EmployeesService;
 import net.restapp.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class EmployeesController {
     private DtoMapper mapper;
 
     @Autowired
-    JavaMailSender mailSender;
+    EmailService emailService;
 
 //-------------------------------- get ----------------------------------------
 
@@ -191,10 +191,10 @@ public class EmployeesController {
         String domain=request.getRequestURL().toString();
         String url = domain.substring(0,domain.indexOf("api")+3);
 
-        Email email1Send = new Email();
+
         LettersExample lettersExample = new LettersExample();
 
-        email1Send.sendEmail(mailSender,email, lettersExample.createWelcomeMessage(url));
+        emailService.sendEmail(email, "welcome at HRManagement",lettersExample.createWelcomeMessage(url));
     }
 
 

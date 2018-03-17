@@ -9,6 +9,7 @@ import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
 import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
+import net.restapp.servise.EmployeesService;
 import net.restapp.servise.UserService;
 import net.restapp.servise.WorkingHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class WorkingHoursController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EmployeesService employeesService;
 
 ////----------------------------get List<Employees> that available for this data-----------------------------
     @ApiOperation(value = "get List of free employees for this date", response = EmployeeReadDTO.class, responseContainer="List")
@@ -93,7 +97,7 @@ public class WorkingHoursController {
                 throw new AccessDeniedException("You don't have permit to get iformation about employee with id=" + employeesId);
             }
         }
-        Integer availableVacationDay = workingHoursService.getAvailableVacationDay(employeesId);
+        Integer availableVacationDay =  employeesService.getAvailableVacationDay(employeesId);
 
         return new ResponseEntity<>(availableVacationDay, HttpStatus.OK);
     }

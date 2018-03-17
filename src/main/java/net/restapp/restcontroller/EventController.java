@@ -6,20 +6,16 @@ import net.restapp.dto.EventReadDTO;
 import net.restapp.exception.EntityNullException;
 import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
-import net.restapp.model.ArchiveSalary;
 import net.restapp.model.Event;
-import net.restapp.servise.EventService;
+import net.restapp.servise.IService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -30,7 +26,7 @@ import java.util.List;
 public class EventController {
 
     @Autowired
-    EventService eventService;
+    IService<Event> eventService;
 
     @Autowired
     DtoMapper mapper;

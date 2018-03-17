@@ -6,9 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
-
+/**
+ * The class implements a set of methods for working
+ * with entities of the {@link ArchiveSalary} class.
+ */
 @Entity
 @Table(name = "archive_salary")
 @Getter
@@ -24,6 +28,7 @@ public class ArchiveSalary {
     @Temporal(TemporalType.DATE)
     @Column(name = "date")
     @ApiModelProperty(notes = "Date of record salary entry to archive")
+    @NotNull
     private Date date;
 
     @Column(name = "month_salary")

@@ -1,6 +1,5 @@
 package net.restapp.model;
 
-import com.sun.istack.internal.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +7,11 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+
+/**
+ * The class implements a set of methods for working
+ * with entities of the {@link Position} class.
+ */
 
 @Entity
 @Table(name = "position")
@@ -34,9 +38,9 @@ public class Position {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
+    @NotNull(message = "This field must be NOT NULL")
     private Department department;
 
-    @Nullable
     @OneToOne(mappedBy = "position")
     private Employees employees;
 

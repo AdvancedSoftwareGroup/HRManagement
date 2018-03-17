@@ -6,7 +6,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * The class used for month hours statistic and salary
+ *
+ */
 @Getter
 @Setter
 public class EmployeeSheet {
