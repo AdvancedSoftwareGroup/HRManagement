@@ -2,11 +2,12 @@ package net.restapp.Utils;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Create PDF file. Use by {@link net.restapp.servise.EmailService}
@@ -22,45 +23,30 @@ public class PDF {
      * @return - PDF file
      */
     public static File createPDF(String pdfName, String text) {
-        //todo: create PDFFiles directory if it don't exist
-        //Обязательно должна быть папка "PDFFiles" в файле с проектом!!!
 
-        Document document = new Document();
-
-        try {
-            //Создаем файл pdfName с расширением pdf в папке PDFFiles
-            PdfWriter.getInstance(document, new FileOutputStream("PDFFiles" + File.separator + pdfName + ".pdf"));
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException x) {
-            x.printStackTrace();
-        }
-
-        //Настройки документа
-        document.open();
-        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-        //Chunk chunk = new Chunk(text, font);
-        Paragraph paragraph = new Paragraph();
-        paragraph.add(text);
-        //chunk.append("Try this one");
-
-        try {
-            //document.add(chunk);
-            document.add(paragraph);
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
-        document.close();
-
-        File file = new File("PDFFiles" + File.separator + pdfName + ".pdf");
-
-        if (file.delete()) {
-            log.info(file.getName() + " is deleted!");
+        String tmp_name_dir = System.getProperty("user.dir") + File.separator + "PDFFiles";
+        String fileName = tmp_name_dir + File.separator + pdfName + ".pdf";
+        File dir = new File(tmp_name_dir);
+        if (!dir.exists()){
+            dir.mkdirs();
         } else {
-            log.error("Delete operation is failed.");
+            Arrays.stream(Objects.requireNonNull(new File(tmp_name_dir).listFiles())).forEach(File::delete);
+        }
+        try {
+            String body = "<html><body> "+text+" </body></html>";
+            OutputStream file = new FileOutputStream(new File(fileName));
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, file);
+            document.open();
+            InputStream is = new ByteArrayInputStream(body.getBytes());
+            XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+            document.close();
+            file.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return file;
+        return new File(fileName);
     }
 
 }

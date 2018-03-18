@@ -1,10 +1,7 @@
 package net.restapp.servise.impl;
 
 import net.restapp.exception.NotEnoughHoursException;
-import net.restapp.model.ArchiveSalary;
-import net.restapp.model.EmployeeSheet;
-import net.restapp.model.Employees;
-import net.restapp.model.WorkingHours;
+import net.restapp.model.*;
 import net.restapp.servise.ArchiveSalaryService;
 import net.restapp.servise.CountService;
 import net.restapp.servise.EmployeesService;
@@ -14,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class use for calculation payment for event, month salary
@@ -58,6 +52,7 @@ public class CountServiceImp implements CountService {
 
     /**
      * Calculate salary for event with status per hours
+     *
      * @param workingHours - workingHours
      * @return - salary for event
      */
@@ -89,6 +84,7 @@ public class CountServiceImp implements CountService {
 
     /**
      * Calculate month salary and create salarySheet for Employee
+     *
      * @param employees - employee
      * @return - employee sheet
      */
@@ -104,24 +100,37 @@ public class CountServiceImp implements CountService {
         myCal.set(Calendar.DAY_OF_MONTH, dayInMonth);
         Date endDate = myCal.getTime();
 
-        List<WorkingHours> list = workingHoursService.getAllForPeriodAndEployee(startDate,endDate,employees.getId());
+        List<WorkingHours> list = workingHoursService.getAllForPeriodAndEployee(startDate, endDate, employees.getId());
 
         BigDecimal sum = BigDecimal.valueOf(0);
-        for (WorkingHours wh: list) {
+        EmployeeSheet employeeSheet = new EmployeeSheet();
+        Map<Status, BigDecimal> statusHours = new HashMap<>();
+        List<Event> listEvents = new ArrayList<>();
+        for (WorkingHours wh : list) {
+
+            BigDecimal bg = statusHours.get(wh.getStatus());
+            if (bg == null) bg = BigDecimal.valueOf(0);
+            statusHours.put(wh.getStatus(), bg.add(wh.getHours()));
+            if (wh.getEvent().getId() != 1) {
+                listEvents.add(wh.getEvent());
+            }
             sum = sum.add(wh.getSalary());
         }
-        EmployeeSheet employeeSheet = new EmployeeSheet();
-        employeeSheet.setDate(Calendar.getInstance().getTime());
+
+        employeeSheet.setDate(startDate);
         employeeSheet.setEmployees(employees);
         employeeSheet.setTotalSalary(sum);
+        employeeSheet.setListEvents(listEvents);
+        employeeSheet.setStatusHours(statusHours);
+
         return employeeSheet;
     }
 
 
-
     /**
      * Calculate salary for employee with status Hospital
-     * @param workingHours  - workingHours
+     *
+     * @param workingHours - workingHours
      * @return salary for hours from workingHours.getHour.
      */
     private BigDecimal calculatePaymentForHospital(WorkingHours workingHours) {
@@ -133,24 +142,25 @@ public class CountServiceImp implements CountService {
 
     /**
      * Calculate hospital payment depends of working experience
+     *
      * @param workingHours - workingHours
      * @param middleSalary - middle salary for period
      * @return - hospital payment per month
      */
     private BigDecimal getMiddleHospitalSalaryIncludeWorkExperience(WorkingHours workingHours, BigDecimal middleSalary) {
         Date startWorking = workingHours.getEmployees().getStartWorkingDate();
-        long countMonthWorkingHere=monthsBetween(startWorking,Calendar.getInstance().getTime());
-        long workingMonth = countMonthWorkingHere+ workingHours.getEmployees().getExperience();
-        long workingYears = workingMonth/12;
+        long countMonthWorkingHere = monthsBetween(startWorking, Calendar.getInstance().getTime());
+        long workingMonth = countMonthWorkingHere + workingHours.getEmployees().getExperience();
+        long workingYears = workingMonth / 12;
         BigDecimal salary;
 
-        if (workingYears > 8){
+        if (workingYears > 8) {
             salary = middleSalary.multiply(SICK_COEF_OVER_EIGHT_YEAR);
         } else {
-            if (workingYears > 5){
+            if (workingYears > 5) {
                 salary = middleSalary.multiply(SICK_COEF_TO_EIGHT_YEAR);
             } else {
-                if (workingYears > 3){
+                if (workingYears > 3) {
                     salary = middleSalary.multiply(SICK_COEF_TO_FIVE_YEAR);
                 } else {
                     salary = middleSalary.multiply(SICK_COEF_TO_THREE_YEAR);
@@ -162,8 +172,9 @@ public class CountServiceImp implements CountService {
 
     /**
      * Return count month between two dates
+     *
      * @param startDate - start date
-     * @param endDate - end date
+     * @param endDate   - end date
      * @return - count of month
      */
     private long monthsBetween(Date startDate, Date endDate) {
@@ -176,6 +187,7 @@ public class CountServiceImp implements CountService {
 
     /**
      * Calculate payment for employee with status vacation
+     *
      * @param workingHours - workingHours
      * @return -salary for hours from workingHours.getHour.
      */
@@ -189,18 +201,20 @@ public class CountServiceImp implements CountService {
 
     /**
      * Convert salary from salary per month to salary per hours
+     *
      * @param salary - salary per month
      * @return - salary per hour
      */
-    private BigDecimal paymentPerHour(BigDecimal salary){
+    private BigDecimal paymentPerHour(BigDecimal salary) {
         BigDecimal hour = BigDecimal.valueOf(WORK_HOURS_PER_DAY * AVERAGE_WORKING_DAY_PER_MONTH);
         return salary.divide(hour, 2, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
      * Calculate middle salary for last countMonth for employee
+     *
      * @param workingHours - workingHours
-     * @param countMonth - count of month
+     * @param countMonth   - count of month
      * @return - middle month salary for employee
      */
     private BigDecimal getMiddleSalaryForPeriod(WorkingHours workingHours, int countMonth) {

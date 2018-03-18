@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -54,9 +55,8 @@ public class ScheduledTasks {
     public void calculateSalary() {
 
         List<Employees> employeesList = employeesService.getAll();
-
-        for (Employees employee: employeesList) {
-            EmployeeSheet employeeSheet = countService.calculateEmployeeSheet(employee);
+        for (Employees employees: employeesList) {
+            EmployeeSheet employeeSheet = countService.calculateEmployeeSheet(employees);
             //save archive salary
             ArchiveSalary archiveSalary = new ArchiveSalary();
             archiveSalary.setEmployee(employeeSheet.getEmployees());
@@ -64,11 +64,15 @@ public class ScheduledTasks {
             archiveSalary.setMonthSalary(employeeSheet.getTotalSalary());
             archiveSalaryService.save(archiveSalary);
 
-//            //send email
-           String mail = employeeSheet.getEmployees().getUser().getEmail();
-           String sendingMessage = "You salary for last month is " + employeeSheet.getTotalSalary();
-           emailService.sendEmail(mail,"You slary",sendingMessage);
+            //send email
+            String mail = employeeSheet.getEmployees().getUser().getEmail();
+            LettersExample lettersExample = new LettersExample();
+            String sendingMessage = lettersExample.createSalaryMessage(employeeSheet);
+
+            File file1 = PDF.createPDF("employee_"+employees.getId(), sendingMessage);
+            emailService.sendPDF(mail,"You sheet from HRManagement",sendingMessage,file1);
         }
+
     }
 
     /**

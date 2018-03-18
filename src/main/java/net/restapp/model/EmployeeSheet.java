@@ -1,11 +1,15 @@
 package net.restapp.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /**
  * The class used for month hours statistic and salary
  *
@@ -20,17 +24,8 @@ public class EmployeeSheet {
 
     private BigDecimal totalSalary;
 
-// todo: show statistic for last month
-// private List<SheetBody> sheetBodys;
-//
-//
-//    @Getter
-//    @Setter
-//    public class SheetBody {
-//        private String name;
-//
-//        private int countHours;
-//
-//        private BigDecimal payment;
-//    }
+    private Map <Status, BigDecimal> statusHours;
+
+    private List<Event> listEvents;
 }
+

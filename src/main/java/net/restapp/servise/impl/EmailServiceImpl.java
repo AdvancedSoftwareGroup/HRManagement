@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -62,6 +63,7 @@ public class EmailServiceImpl implements EmailService {
         // Enable the multipart flag!
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            prepareEmail(email,title,massageText,helper);
             helper.addInline("id101", file);
         } catch (javax.mail.MessagingException e) {
             e.printStackTrace();

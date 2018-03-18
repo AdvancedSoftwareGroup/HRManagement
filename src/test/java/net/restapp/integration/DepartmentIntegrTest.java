@@ -1,18 +1,17 @@
 package net.restapp.integration;
 import net.restapp.model.Department;
 import net.restapp.repository.RepoDepartment;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.Test;
+
 import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@RunWith(SpringRunner.class)
-public class DepartmentIntegrTest {
+public class DepartmentIntegrTest extends AbstractTestNGSpringContextTests {
     @Autowired
     RepoDepartment repoDepartment;
     @LocalServerPort
@@ -36,7 +35,7 @@ public class DepartmentIntegrTest {
      */
     @Test
     public void read_dep_Test() {
-        given().
+       given().
                 auth().basic("svitlana.anulich@gmail.com", "22222222").
                 when().
                 get("http://localhost:" + port + "/api/department/{id}", 1007).

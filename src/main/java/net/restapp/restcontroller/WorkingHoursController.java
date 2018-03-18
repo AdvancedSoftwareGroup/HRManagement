@@ -1,17 +1,19 @@
 package net.restapp.restcontroller;
 
 import io.swagger.annotations.*;
+import net.restapp.Utils.LettersExample;
+import net.restapp.Utils.PDF;
 import net.restapp.dto.EmployeeReadDTO;
 import net.restapp.dto.WorkingHoursCreateDTO;
 import net.restapp.dto.WorkingHoursReadDTO;
 import net.restapp.exception.EntityConstraintException;
 import net.restapp.exception.PathVariableNullException;
 import net.restapp.mapper.DtoMapper;
+import net.restapp.model.ArchiveSalary;
+import net.restapp.model.EmployeeSheet;
 import net.restapp.model.Employees;
 import net.restapp.model.WorkingHours;
-import net.restapp.servise.EmployeesService;
-import net.restapp.servise.UserService;
-import net.restapp.servise.WorkingHoursService;
+import net.restapp.servise.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -281,5 +285,6 @@ public class WorkingHoursController {
         }
         return mapper.listSimpleFieldMap(workingHours,WorkingHoursReadDTO.class);
     }
+
 
 }
