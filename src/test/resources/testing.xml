@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Suite">
+<test name="Regression1" >
+    <classes>
+        <class name= "net.restapp.integration.DepartmentIntegrTest">
+            <methods>
+                <include name="create_dep_Test" />
+                <include name="read_dep_Test" />
+                <include name="put_new_name_value_to_dep_Test" />
+                <include name="read_all_dep_Test" />
+                <include name="delete_dep_Test" />
+            </methods>
+        </class>
+    </classes>
+</test>
+</suite>
