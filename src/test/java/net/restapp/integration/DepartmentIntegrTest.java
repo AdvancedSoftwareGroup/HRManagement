@@ -35,7 +35,7 @@ public class DepartmentIntegrTest extends AbstractTestNGSpringContextTests {
      */
     @Test
     public void read_dep_Test() {
-        given().
+       given().
                 auth().basic("svitlana.anulich@gmail.com", "22222222").
                 when().
                 get("http://localhost:" + port + "/api/department/{id}", 1007).

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 /**
@@ -42,6 +44,9 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     CountService countService;
 
     private final static BigDecimal MAX_WORK_HOUR_FOR_DAY = BigDecimal.valueOf(16);
+    private final static int MAX_DAYS_IN_FUTURE = 14;
+    private final static int MAX_DAYS_IN_PAST = 1;
+
 
     /**
      * The method calls a repository's method for save a workingHours
@@ -50,11 +55,33 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     @Transactional
     @Override
     public void save(WorkingHours workingHours) {
-        isWeCanAddEvent(workingHours);
+        validationDate(workingHours);
+        validationEvent(workingHours);
         isEmployeeFree(workingHours);
         BigDecimal salary = countService.calculatePaymentOfEvent(workingHours);
         workingHours.setSalary(salary);
         repoWorkingHours.save(workingHours);
+    }
+
+    /**
+     * Check that event date is in the specified redistribution
+     * @param workingHours - workingHours
+     */
+    private void validationDate(WorkingHours workingHours) {
+        Calendar futureTime = Calendar.getInstance();
+        futureTime.add(Calendar.DAY_OF_MONTH, +MAX_DAYS_IN_FUTURE);
+        Calendar past = Calendar.getInstance();
+        past.add(Calendar.DAY_OF_MONTH, -MAX_DAYS_IN_PAST);
+
+        Calendar workHour = Calendar.getInstance();
+        workHour.setTime(workingHours.getStartTime());
+
+        if (workHour.before(past) || workHour.after(futureTime)){
+            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+            throw new IllegalArgumentException(
+                    "Date for working hours must be after "+format1.format(past.getTime())
+            +" and before "+format1.format(futureTime.getTime()));
+        }
     }
 
     /**
@@ -80,7 +107,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
      * Check equivalents of status ID and events ID
      * @param workingHours - workingHours
      */
-    private void isWeCanAddEvent(WorkingHours workingHours) {
+    private void validationEvent(WorkingHours workingHours) {
         if (workingHours.getStatus().getId() > 1 && workingHours.getStatus().getId() < 6){
             if (workingHours.getEvent().getId() != 1) {
                 throw new EntityConstraintException("for 1 < statusId < 6 event id must be equal 1");

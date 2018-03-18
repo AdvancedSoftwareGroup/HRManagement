@@ -18,6 +18,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -46,8 +48,12 @@ public class DepartmentController {
     })
     @GetMapping(value = "/{departmentId}")
 
-    public DepartmentReadDTO getDepartment(@ApiParam(value = "id of Departament", required = true) @PathVariable Long departmentId){
+    public DepartmentReadDTO getDepartment(@ApiParam(value = "id of Departament", required = true) @PathVariable Long departmentId) {
 
+        if (departmentId == null){
+            String msg = "PathVariable can't be null ";
+            throw new PathVariableNullException(msg);
+        }
         Department department =  departmentService.getById(departmentId);
 
         if (department == null) {
