@@ -64,11 +64,14 @@ public class EmployeesServiceImpl implements EmployeesService {
         if (employees.getId() == 0) {
             isPositionFree(employees, positionId);
             addNewUser(employees);
+            employees.setUser(getUserByEmail(employees.getUser().getEmail()));
+        } else {
+            employees.setUser(getUserByEmployeeId(employees.getId()));
         }
-        employees.setUser(getUserByEmployeeId(employees.getId()));
-
         repoEmployees.save(employees);
     }
+
+
 
     /**
      * set default values for employee and create User for it
@@ -213,5 +216,14 @@ public class EmployeesServiceImpl implements EmployeesService {
     public User getUserByEmployeeId(Long id) {
         Employees employees = repoEmployees.getOne(id);
         return repoUser.getOne(employees.getUser().getId());
+    }
+
+    /**
+     * Get user by Email
+     * @param email - user's email
+     * @return - user
+     */
+    private User getUserByEmail(String email) {
+        return repoUser.findByEmail(email);
     }
 }
